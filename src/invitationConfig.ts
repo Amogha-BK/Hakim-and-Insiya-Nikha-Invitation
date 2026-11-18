@@ -46,7 +46,7 @@ export const invitationConfig = {
   invitationLine: "Together with their families, Nellikavil Mohammed Javeed and Dr. Shaik Fareen Banu request the honour of your presence and duas as they celebrate their wedding.",
   blessingLine: "Your presence, blessings, and duas mean the world to us as we unite under the grace of Almighty Allah.",
   closingBlessing: "We look forward to celebrating this special occasion with you. Your presence and blessings will make our celebration complete.",
-  homeAddress: "Might Colony, Hyderabad",
+  homeAddress: "Migh Colony, Hyderabad",
   hosts: "",
   rsvp: "",
   wishesFrom: groomParents,
