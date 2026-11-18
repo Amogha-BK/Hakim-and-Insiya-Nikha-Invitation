@@ -25,7 +25,7 @@ const hyderabadVenue = {
   mapUrl: "https://www.google.com/maps/search/?api=1&query=Ashiana+Banquet+and+Conference+Road+No.+1+Banjara+Hills+Hyderabad+500034",
 };
 
-const groomParents = "Mrs. and Mr. Abbas Malika";
+const groomParents = "Mrs and Mr Abbas Nellikavil";
 
 export const invitationConfig = {
   couple: {
@@ -46,7 +46,7 @@ export const invitationConfig = {
   invitationLine: "Together with their families, Nellikavil Mohammed Javeed and Dr. Shaik Fareen Banu request the honour of your presence and duas as they celebrate their wedding.",
   blessingLine: "Your presence, blessings, and duas mean the world to us as we unite under the grace of Almighty Allah.",
   closingBlessing: "We look forward to celebrating this special occasion with you. Your presence and blessings will make our celebration complete.",
-  homeAddress: "MIG Colony, Hyderabad",
+  homeAddress: "Might Colony, Hyderabad",
   hosts: "",
   rsvp: "",
   wishesFrom: groomParents,
