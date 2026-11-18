@@ -55,7 +55,7 @@ function Monogram({ className = "" }: { className?: string }) {
       aria-label={`${config.display.initials.join(" and ")} wedding monogram for ${config.display.names.join(" and ")}`}
     >
       <span>{config.display.initials[0]}</span>
-      <i>&amp;</i>
+      <span className="monogram-ampersand">&amp;</span>
       <span>{config.display.initials[1]}</span>
     </span>
   );
@@ -563,7 +563,9 @@ export default function App() {
                   <span>Blessed Union</span>
                 </div>
                 <CouplePortrait className="hero-couple" animate={false} />
-                <p className="hero-art-caption text-[#e2d6b5]">{familyOrder.map((role) => families[role].name).join(" & ")}</p>
+                <p className="hero-art-caption text-[#e2d6b5]">
+                  {families[familyOrder[0]].name} <span className="text-[0.8em]">&amp;</span> {families[familyOrder[1]].name}
+                </p>
               </div>
 
               <div className="hero-inner midnight-hero-inner">
@@ -573,8 +575,8 @@ export default function App() {
                 <p className="eyebrow text-[#d4af37]">Together with their families</p>
                 <h1 ref={invitationHeading} tabIndex={-1}>
                   <span className="hero-name text-[#faf7ee]">{display.names[0]}</span>
-                  <span className="hero-ampersand text-[#d4af37]">&amp;</span>
-                  <span className="hero-name hero-outlined-name text-[#faf7ee]">{display.names[1]}</span>
+                  <span className="hero-ampersand">&amp;</span>
+                  <span className="hero-name text-[#faf7ee]">{display.names[1]}</span>
                 </h1>
                 <p className="hero-invitation-line text-[#e8dfc8]">
                   {config.wording.heroMessage}
@@ -680,7 +682,7 @@ export default function App() {
                 {config.wording.closingNote}
               </p>
               <p className="closing-couple-names text-[#d4af37]">
-                {display.names.join(" & ")}
+                {display.names[0]} <span className="text-[0.75em]">&amp;</span> {display.names[1]}
               </p>
               {config.wishesFrom && <div className="closing-wishes">
                 <h3>Best Wishes</h3>

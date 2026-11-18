@@ -25,6 +25,8 @@ const hyderabadVenue = {
   mapUrl: "https://www.google.com/maps/search/?api=1&query=Ashiana+Banquet+and+Conference+Road+No.+1+Banjara+Hills+Hyderabad+500034",
 };
 
+const groomParents = "Mrs. and Mr. Abbas Malika";
+
 export const invitationConfig = {
   couple: {
     first: "Fareen",
@@ -33,7 +35,7 @@ export const invitationConfig = {
     brideFullName: "Dr. Shaik Fareen Banu",
     brideQualification: "MBBS",
     groomQualification: "B.E I.T",
-    groomParents: "S/o Mr. & Mrs. Abbas Nellikavil",
+    groomParents: `S/o ${groomParents}`,
     brideParents: "D/o Dr. H. Zeenath Banu [AH Dept] and Shaik Sohail Ahmed",
     brideGrandparents: "Grand D/o Late Mrs. Hameeda Banu & P. Mohammed Hanief",
     groomGrandparents: "Grand S/o Late T.K.M Koya & Late Ahmed Kutty",
@@ -44,10 +46,10 @@ export const invitationConfig = {
   invitationLine: "Together with their families, Nellikavil Mohammed Javeed and Dr. Shaik Fareen Banu request the honour of your presence and duas as they celebrate their wedding.",
   blessingLine: "Your presence, blessings, and duas mean the world to us as we unite under the grace of Almighty Allah.",
   closingBlessing: "We look forward to celebrating this special occasion with you. Your presence and blessings will make our celebration complete.",
-  homeAddress: "Migh Colony, Mehdipatnam, Hyderabad – 500028",
+  homeAddress: "MIG Colony, Hyderabad",
   hosts: "",
   rsvp: "",
-  wishesFrom: "Mr. & Mrs. Abbas Nellikavil",
+  wishesFrom: groomParents,
   monogram: "/assets/monogram-aa.png",
   artwork: entranceMedia.courtyard,
   venue: hyderabadVenue,
@@ -90,7 +92,7 @@ export const invitationConfig = {
       scene: "lanterns",
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Avoki+Centro+Arena+Kottakadavu+Kadalundi+Calicut+Kerala+673302",
       compact: true,
-      wishesFrom: "Mr. & Mrs. Abbas Nellikavil",
+      wishesFrom: groomParents,
       hostAddress: "Abbas Nellikavil, Thoufeeq, TPS Road, Chaliyam, Calicut",
     },
   ] satisfies Celebration[],

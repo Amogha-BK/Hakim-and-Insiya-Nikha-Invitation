@@ -195,7 +195,7 @@ export function ScratchCard() {
               </div>
             </div>
             <p className="scratch-couple-names text-[#faf8f5]">
-              {config.display.names[0]} <span className="text-[#d4af37]">&amp;</span> {config.display.names[1]}
+              {config.display.names[0]} <span className="text-[0.75em] text-[#d4af37]">&amp;</span> {config.display.names[1]}
             </p>
             <p className="scratch-venue-city text-[#d4af37]">Nikah Ceremony · January 2027</p>
             <div className="scratch-forever-pill bg-[#081225]/80 border border-[#d4af37]/40 text-[#faf8f5]">
