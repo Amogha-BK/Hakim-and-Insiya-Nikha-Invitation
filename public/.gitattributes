@@ -1,0 +1,9 @@
+# AgentPlat packages this default favicon directly from source without LFS hydration.
+favicon.png -filter -diff -merge -text
+
+# The opening poster must be present in Git-based static deployments.
+envelope-poster.jpg -filter -diff -merge -text
+
+# Include the complete envelope media in standard Git checkouts.
+envelope-end.jpg -filter -diff -merge -text
+envelope-open.mp4 -filter -diff -merge -text
