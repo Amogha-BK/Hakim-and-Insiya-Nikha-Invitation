@@ -20,7 +20,7 @@ export type Celebration = {
 };
 
 const hyderabadVenue = {
-  name: "Aashiana Banquet & Conference",
+  name: "Ashiana Banquet & Conference",
   address: "Road No. 1, Banjara Hills, Hyderabad – 500034",
   mapUrl: "https://www.google.com/maps/search/?api=1&query=Ashiana+Banquet+and+Conference+Road+No.+1+Banjara+Hills+Hyderabad+500034",
 };
@@ -35,10 +35,10 @@ export const invitationConfig = {
     brideFullName: "Dr. Shaik Fareen Banu",
     brideQualification: "MBBS",
     groomQualification: "B.E I.T",
-    groomParents: `S/o ${groomParents}`,
+    groomParents: `s/o ${groomParents}`,
     brideParents: "D/o Dr. H. Zeenath Banu [AH Dept] and Shaik Sohail Ahmed",
     brideGrandparents: "Grand D/o Late Mrs. Hameeda Banu & P. Mohammed Hanief",
-    groomGrandparents: "Grand S/o Late T.K.M Koya & Late Ahmed Kutty",
+    groomGrandparents: "Grand s/o Late T.K.M Koya & Late Ahmed Kutty",
   },
   weddingLabel: "9 January 2027",
   countdownTarget: "2027-01-09T00:00:00+05:30",
