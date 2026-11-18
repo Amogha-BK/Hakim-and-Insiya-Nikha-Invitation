@@ -1,7 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { Plugin } from "vite";
-import { MAX_RECORD_BYTES, validateRecord } from "../src/invitation/schema.ts";
+import { entranceMedia } from "../src/invitation/entranceMedia.ts";
+import { MAX_RECORD_BYTES, toTemplateConfig, validateRecord } from "../src/invitation/schema.ts";
 
 export function wishnotePlugin(): Plugin {
   const editor = process.env.WISHNOTE_EDITOR === "1";
@@ -88,7 +89,7 @@ export function wishnotePlugin(): Plugin {
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;");
-        const title = `${record.couple.first} & ${record.couple.second} | Wedding Invitation`;
+        const title = `${toTemplateConfig(record).display.names.join(" & ")} | Wedding Invitation`;
         // Remove inherited customer-specific metadata, analytics and injected scripts.
         html = removeInheritedMetadata(html).replace(
           /<title>[\s\S]*?<\/title>/,
@@ -118,12 +119,9 @@ export function wishnotePlugin(): Plugin {
       // Personalized builds copy only shared template assets and explicitly selected media.
       // Never copy the entire original customer's public directory into a new order.
       const files = new Set([
-        "/assets/envelope-opening-hd-v2.mp4",
-        "/assets/entrance-courtyard-hd-v2.webp",
-        "/envelope-poster.jpg",
-        "/assets/mehndi-floral-arch-v2.webp",
-        "/assets/haldi-floral-arch-v2.webp",
-        "/assets/wedding-floral-arch-v2.webp",
+        ...Object.values(entranceMedia),
+        "/assets/wedding-ceremony-hd-opt.webp",
+        "/assets/reception-hd-opt.webp",
       ]);
       for (const file of [
         record.media.portraitUrl,

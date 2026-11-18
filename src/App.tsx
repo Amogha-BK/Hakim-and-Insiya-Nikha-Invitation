@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import qrcode from "qrcode-generator";
 import {
   CalendarPlus,
@@ -17,7 +17,8 @@ import {
   Heart,
   Sparkles,
 } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion, useScroll } from "motion/react";
+import { AnimatePresence, LazyMotion, domAnimation, useReducedMotion, useScroll } from "motion/react";
+import * as m from "motion/react-m";
 import type { Celebration } from "./invitation/schema";
 import { timezone } from "./invitation/schema";
 import { useInvitation } from "./invitation/InvitationContext";
@@ -51,7 +52,7 @@ function Monogram({ className = "" }: { className?: string }) {
     <span
       className={`monogram ${className}`}
       role="img"
-      aria-label={`${config.display.initials.join(" and ")} wedding monogram for ${config.couple.first} and ${config.couple.second}`}
+      aria-label={`${config.display.initials.join(" and ")} wedding monogram for ${config.display.names.join(" and ")}`}
     >
       <span>{config.display.initials[0]}</span>
       <i>&amp;</i>
@@ -159,7 +160,7 @@ function MusicControl({
         <audio
           ref={audio}
           src={config.optional.musicUrl}
-          preload="metadata"
+          preload="none"
           loop
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
@@ -218,7 +219,7 @@ function Navigation() {
 
   return (
     <nav className="site-nav midnight-site-nav" aria-label="Invitation navigation">
-      <motion.div
+      <m.div
         className="reading-progress"
         style={{ scaleX: scrollYProgress, background: "#d4af37" }}
         aria-hidden="true"
@@ -299,7 +300,7 @@ function Countdown() {
 function SectionHeading({ eyebrow, children }: { eyebrow?: string; children: React.ReactNode }) {
   const reducedMotion = useReducedMotion();
   return (
-    <motion.div
+    <m.div
       className="section-heading midnight-section-heading"
       initial={reducedMotion ? false : { opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -313,7 +314,7 @@ function SectionHeading({ eyebrow, children }: { eyebrow?: string; children: Rea
         <Flower2 strokeWidth={1} style={{ color: "#d4af37" }} />
         <i style={{ background: "#d4af37" }} />
       </div>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -338,7 +339,7 @@ function getGoogleCalendarUrl(event: Celebration) {
   }
 }
 
-function VenueQr({ href }: { href: string }) {
+function VenueQr({ href, venue }: { href: string; venue: string }) {
   const code = useMemo(() => {
     const qr = qrcode(0, "M");
     qr.addData(href);
@@ -355,7 +356,7 @@ function VenueQr({ href }: { href: string }) {
   return (
     <a className="venue-qr focus-ring" href={href} target="_blank" rel="noreferrer">
       <svg viewBox={`0 0 ${code.size} ${code.size}`} width="180" height="180" role="img"
-        aria-label="QR code for the wedding venue on Google Maps" shapeRendering="crispEdges">
+        aria-label={`QR code for ${venue}`} shapeRendering="crispEdges">
         <rect width={code.size} height={code.size} fill="#fff" />
         <path d={code.path} fill="#000" />
       </svg>
@@ -372,18 +373,18 @@ function EventCard({ event, index }: { event: Celebration; index: number }) {
   const hasVenue = Boolean(event.venue && event.venue.trim());
 
   return (
-    <motion.article
+    <m.article
       id={event.id}
-      className={`wedding-function-card midnight-function-card event-${event.id}`}
+      className={`wedding-function-card midnight-function-card event-${event.id}${event.compact ? " compact-ceremony" : ""}`}
       initial={reducedMotion ? false : { opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 0.45, delay: index * 0.08 }}
     >
       <div className="function-card-heading">
-        <div className="ceremony-heading-art" aria-hidden="true">
+        {!event.compact && <div className="ceremony-heading-art" aria-hidden="true">
           <img src={event.image} alt="" loading="lazy" decoding="async" />
-        </div>
+        </div>}
         <h3>{event.shortName}</h3>
         {subtitle !== event.shortName && <p className="function-card-subtitle">{subtitle}</p>}
       </div>
@@ -413,6 +414,7 @@ function EventCard({ event, index }: { event: Celebration; index: number }) {
               href={event.mapUrl}
               target="_blank"
               rel="noreferrer"
+              aria-label={`Get directions to ${event.venue}`}
             >
               <NavigationIcon size={18} aria-hidden="true" /> Get directions
             </a>
@@ -427,17 +429,43 @@ function EventCard({ event, index }: { event: Celebration; index: number }) {
             <CalendarPlus size={19} aria-hidden="true" /> Add to calendar
           </a>}
         </div>
-        {!isReception && hasVenue && event.mapUrl && <VenueQr href={event.mapUrl} />}
+        {(!isReception || event.compact) && event.venue && event.mapUrl && (
+          <VenueQr href={event.mapUrl} venue={event.venue} />
+        )}
+        {event.wishesFrom && (
+          <div className="ceremony-wishes">
+            <h4>Best Wishes</h4>
+            <p>{event.wishesFrom}</p>
+            {event.hostAddress && <p>{event.hostAddress}</p>}
+          </div>
+        )}
       </div>
-      <div className="ceremony-footer-art" aria-hidden="true">
+      {!event.compact && <div className="ceremony-footer-art" aria-hidden="true">
         <img src={event.image} alt="" loading="lazy" decoding="async" />
-      </div>
-    </motion.article>
+      </div>}
+    </m.article>
   );
 }
 
 export default function App() {
   const config = useInvitation();
+  const { couple, display } = config;
+  const families = {
+    Bride: {
+      name: couple.brideFullName || couple.first,
+      qualification: couple.brideQualification,
+      parents: couple.brideParents,
+      grandparents: couple.brideGrandparents,
+    },
+    Groom: {
+      name: couple.groomFullName || couple.second,
+      qualification: couple.groomQualification,
+      parents: couple.groomParents,
+      grandparents: couple.groomGrandparents,
+    },
+  };
+  const familyOrder = couple.groomFirst ? (["Groom", "Bride"] as const) : (["Bride", "Groom"] as const);
+  const [started, setStarted] = useState(false);
   const [opened, setOpened] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const invitationHeading = useRef<HTMLHeadingElement>(null);
@@ -473,6 +501,7 @@ export default function App() {
   }, [revealed]);
 
   const handleStartOpening = () => {
+    setStarted(true);
     if (!weddingAudio.current) return;
     weddingAudio.current.volume = 0.35;
     void weddingAudio.current.play().catch(() => {});
@@ -489,7 +518,7 @@ export default function App() {
   };
 
   return (
-    <>
+    <LazyMotion features={domAnimation} strict>
       <AnimatePresence onExitComplete={() => setRevealed(true)}>
         {!opened && (
           <InvitationOpening
@@ -501,7 +530,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      <motion.div
+      <m.div
         className="invitation midnight-royal-invitation"
         inert={!revealed}
         aria-hidden={!revealed}
@@ -512,7 +541,7 @@ export default function App() {
         <Navigation />
         <MusicControl canPlay={opened} audio={weddingAudio} />
 
-        <main>
+        {started && <main>
           <a className="skip-to-content focus-ring" href="#celebrations">
             Skip to celebration details
           </a>
@@ -534,7 +563,7 @@ export default function App() {
                   <span>Blessed Union</span>
                 </div>
                 <CouplePortrait className="hero-couple" animate={false} />
-                <p className="hero-art-caption text-[#e2d6b5]">{config.couple.brideFullName} &amp; {config.couple.groomFullName}</p>
+                <p className="hero-art-caption text-[#e2d6b5]">{familyOrder.map((role) => families[role].name).join(" & ")}</p>
               </div>
 
               <div className="hero-inner midnight-hero-inner">
@@ -543,9 +572,9 @@ export default function App() {
                 </p>
                 <p className="eyebrow text-[#d4af37]">Together with their families</p>
                 <h1 ref={invitationHeading} tabIndex={-1}>
-                  <span className="hero-name text-[#faf7ee]">{config.couple.first}</span>
+                  <span className="hero-name text-[#faf7ee]">{display.names[0]}</span>
                   <span className="hero-ampersand text-[#d4af37]">&amp;</span>
-                  <span className="hero-name hero-groom-name text-[#faf7ee]">{config.couple.second}</span>
+                  <span className="hero-name hero-outlined-name text-[#faf7ee]">{display.names[1]}</span>
                 </h1>
                 <p className="hero-invitation-line text-[#e8dfc8]">
                   {config.wording.heroMessage}
@@ -570,7 +599,7 @@ export default function App() {
           {/* Formal Invitation Details Section */}
           <section className="family-section midnight-family-section" id="invitation">
             <IslamicJaliFlourish className="family-sprig" />
-            <motion.div
+            <m.div
               initial={reducedMotion ? false : { opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.1 }}
@@ -584,21 +613,21 @@ export default function App() {
               </SectionHeading>
 
               <div className="invitation-families midnight-families" aria-label="The couple">
-                <div className="formal-name-card midnight-name-card">
-                  <span className="formal-role text-[#d4af37]">Bride</span>
-                  <h2>{config.couple.brideFullName || config.couple.first}</h2>
-                  {config.couple.brideQualification && <p className="formal-qualification">{config.couple.brideQualification}</p>}
-                  {config.couple.brideParents && <p>{config.couple.brideParents}</p>}
-                  {config.couple.brideGrandparents && <p>{config.couple.brideGrandparents}</p>}
-                </div>
-                <span className="family-weds text-[#d4af37]">and</span>
-                <div className="formal-name-card midnight-name-card">
-                  <span className="formal-role text-[#d4af37]">Groom</span>
-                  <h2>{config.couple.groomFullName || config.couple.second}</h2>
-                  {config.couple.groomQualification && <p className="formal-qualification">{config.couple.groomQualification}</p>}
-                  {config.couple.groomParents && <p>{config.couple.groomParents}</p>}
-                  {config.couple.groomGrandparents && <p>{config.couple.groomGrandparents}</p>}
-                </div>
+                {familyOrder.map((role, index) => {
+                  const { name, qualification, parents, grandparents } = families[role];
+                  return (
+                    <Fragment key={role}>
+                      {index === 1 && <span className="family-weds text-[#d4af37]">and</span>}
+                      <div className="formal-name-card midnight-name-card">
+                        <span className="formal-role text-[#d4af37]">{role}</span>
+                        <h2>{name}</h2>
+                        {qualification && <p className="formal-qualification">{qualification}</p>}
+                        {parents && <p>{parents}</p>}
+                        {grandparents && <p>{grandparents}</p>}
+                      </div>
+                    </Fragment>
+                  );
+                })}
               </div>
 
               <p className="invitation-main-paragraph">
@@ -608,7 +637,7 @@ export default function App() {
               <p className="family-blessing text-[#f3e5ab] italic">
                 "May Allah bless this union and shower His blessings upon you both, and unite you in goodness."
               </p>
-            </motion.div>
+            </m.div>
           </section>
 
           {/* Section 3 & 5 — Scratch to Reveal Date & Countdown */}
@@ -651,7 +680,7 @@ export default function App() {
                 {config.wording.closingNote}
               </p>
               <p className="closing-couple-names text-[#d4af37]">
-                {config.couple.first} &amp; {config.couple.second}
+                {display.names.join(" & ")}
               </p>
               {config.wishesFrom && <div className="closing-wishes">
                 <h3>Best Wishes</h3>
@@ -676,8 +705,8 @@ export default function App() {
               </div>
             </div>
           </footer>
-        </main>
-      </motion.div>
-    </>
+        </main>}
+      </m.div>
+    </LazyMotion>
   );
 }

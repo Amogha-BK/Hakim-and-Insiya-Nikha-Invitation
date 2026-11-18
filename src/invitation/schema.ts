@@ -14,6 +14,9 @@ export type WeddingEvent = {
   image: string;
   scene: "lanterns" | "fire" | "candlelight";
   phereTime?: string;
+  compact?: boolean;
+  wishesFrom?: string;
+  hostAddress?: string;
 };
 export type WeddingRecord = {
   version: 1;
@@ -26,6 +29,7 @@ export type WeddingRecord = {
   couple: {
     first: string;
     second: string;
+    groomFirst?: boolean;
     groomFullName?: string;
     brideFullName?: string;
     brideQualification?: string;
@@ -241,6 +245,9 @@ export function validateRecord(value: unknown): WeddingRecord {
       image: media(text(e, "image", path, true, 12 * 1024 * 1024), `${path}image`, "image", true),
       scene: scene as WeddingEvent["scene"],
       phereTime: text(e, "phereTime", path),
+      compact: e.compact === true || undefined,
+      wishesFrom: text(e, "wishesFrom", path) || undefined,
+      hostAddress: text(e, "hostAddress", path) || undefined,
     };
   });
   if (!seen.has("wedding") && !seen.has("nikah"))
@@ -276,6 +283,7 @@ export function validateRecord(value: unknown): WeddingRecord {
     couple: {
       first: text(couple, "first", "couple.", true, 80),
       second: text(couple, "second", "couple.", true, 80),
+      groomFirst: couple.groomFirst === true || undefined,
       brideFullName: text(couple, "brideFullName", "couple.", false, 200),
       groomFullName: text(couple, "groomFullName", "couple.", false, 200),
       brideQualification: text(couple, "brideQualification", "couple.", false, 80),
@@ -366,13 +374,15 @@ export function timeLabel(value: string) {
 }
 export function toTemplateConfig(record: WeddingRecord) {
   const wedding = dateParts(record.weddingDate);
+  const { first, second, groomFirst } = record.couple;
+  const names = groomFirst ? [second, first] : [first, second];
   const dates = [...new Set(record.celebrations.map((e) => e.start.slice(0, 10)))].sort();
-  const first = dateParts(dates[0]);
+  const firstDate = dateParts(dates[0]);
   const last = dateParts(dates[dates.length - 1]);
   const range =
     dates.length === 1
-      ? first.full
-      : first.month === last.month && first.year === last.year
+      ? firstDate.full
+      : firstDate.month === last.month && firstDate.year === last.year
         ? `${dates.map((d) => dateParts(d).day).join(" & ")} ${last.month} ${last.year}`
         : dates.map((d) => dateParts(d).full).join(" · ");
   return {
@@ -382,7 +392,8 @@ export function toTemplateConfig(record: WeddingRecord) {
     display: {
       wedding,
       celebrationsLabel: record.city && record.city !== "India" ? `${range} · ${record.city}` : range,
-      initials: [record.couple.first[0], record.couple.second[0]],
+      names,
+      initials: names.map((name) => name[0]),
       countdownLabel: `${dateParts(record.countdownTarget).full}`,
     },
     celebrations: record.celebrations.map((e) => ({
@@ -390,7 +401,7 @@ export function toTemplateConfig(record: WeddingRecord) {
       dateLabel: `${dateParts(e.start).weekday}, ${dateParts(e.start).full}`,
       hasExactTime: e.start.slice(11, 19) !== "00:00:00",
       timeLabel: e.timeLabel ?? (e.start.slice(11, 19) === "00:00:00" ? "" : timeLabel(e.start)),
-      calendarTitle: `${record.couple.first} & ${record.couple.second} · ${e.shortName}`,
+      calendarTitle: `${names.join(" & ")} · ${e.shortName}`,
     })),
   };
 }

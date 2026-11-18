@@ -18,7 +18,7 @@ function DraftPreview() {
       try {
         const record = validateRecord(event.data.record);
         setPreview({ record, revision: event.data.revision });
-        document.title = `${record.couple.first} & ${record.couple.second} · Private draft`;
+        document.title = `${toTemplateConfig(record).display.names.join(" & ")} · Private draft`;
         window.parent.postMessage(
           { type: "wishnote:applied", revision: event.data.revision },
           window.location.origin,

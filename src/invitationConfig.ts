@@ -1,3 +1,5 @@
+import { entranceMedia } from "./invitation/entranceMedia.ts";
+
 export type Celebration = {
   id: "nikah" | "reception";
   shortName: string;
@@ -12,6 +14,15 @@ export type Celebration = {
   image: string;
   scene: "lanterns" | "fire" | "candlelight";
   mapUrl?: string;
+  compact?: boolean;
+  wishesFrom?: string;
+  hostAddress?: string;
+};
+
+const hyderabadVenue = {
+  name: "Aashiana Banquet & Conference",
+  address: "Road No. 1, Banjara Hills, Hyderabad – 500034",
+  mapUrl: "https://www.google.com/maps/search/?api=1&query=Ashiana+Banquet+and+Conference+Road+No.+1+Banjara+Hills+Hyderabad+500034",
 };
 
 export const invitationConfig = {
@@ -22,7 +33,7 @@ export const invitationConfig = {
     brideFullName: "Dr. Shaik Fareen Banu",
     brideQualification: "MBBS",
     groomQualification: "B.E I.T",
-    groomParents: "S/o Mrs&Mr Abbas Nellikavil",
+    groomParents: "S/o Mr. & Mrs. Abbas Nellikavil",
     brideParents: "D/o Dr. H. Zeenath Banu [AH Dept] and Shaik Sohail Ahmed",
     brideGrandparents: "Grand D/o Late Mrs. Hameeda Banu & P. Mohammed Hanief",
     groomGrandparents: "Grand S/o Late T.K.M Koya & Late Ahmed Kutty",
@@ -30,58 +41,57 @@ export const invitationConfig = {
   weddingLabel: "9 January 2027",
   countdownTarget: "2027-01-09T00:00:00+05:30",
   islamicInvocation: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
-  invitationLine: "Together with their families, Dr. Shaik Fareen Banu & Nellikavil Mohammed Javeed request the honour of your presence and duas on the auspicious occasion of their Nikah.",
+  invitationLine: "Together with their families, Nellikavil Mohammed Javeed and Dr. Shaik Fareen Banu request the honour of your presence and duas as they celebrate their wedding.",
   blessingLine: "Your presence, blessings, and duas mean the world to us as we unite under the grace of Almighty Allah.",
   closingBlessing: "We look forward to celebrating this special occasion with you. Your presence and blessings will make our celebration complete.",
-  homeAddress: "Chanda Nagar, Hyderabad – 500050",
+  homeAddress: "Migh Colony, Mehdipatnam, Hyderabad – 500028",
   hosts: "",
   rsvp: "",
-  wishesFrom: "Abdul Wahid, Mrs Zahida Banu, Mrs. Zabreena Banu and Shaik Shama Banu",
+  wishesFrom: "Mr. & Mrs. Abbas Nellikavil",
   monogram: "/assets/monogram-aa.png",
-  artwork: "/assets/entrance-courtyard-hd-v2.webp",
-  venue: {
-    name: "Aashiana Banquet & Conference",
-    address: "Road No. 1, Banjara Hills, Hyderabad – 500034",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=Aashiana+Banquet+%26+Conference+Road+No.+1+Banjara+Hills+Hyderabad+500034",
-  },
+  artwork: entranceMedia.courtyard,
+  venue: hyderabadVenue,
   contacts: [] as string[],
   optional: {
     travel: "",
     stay: "",
     contact: "",
-    musicUrl: "/assets/kudmayi.mp3",
+    musicUrl: "/assets/kudmayi.m4a",
     whatsappHostNumber: "",
   },
   celebrations: [
     {
       id: "nikah",
-      shortName: "Wedding Ceremony",
+      shortName: "Nikah",
       title: "Nikah",
       dateLabel: "Saturday, 9 January 2027",
-      timeLabel: "After Maghrib",
-      venue: "Aashiana Banquet & Conference",
-      address: "Road No. 1, Banjara Hills, Hyderabad – 500034",
+      timeLabel: "",
+      venue: hyderabadVenue.name,
+      address: hyderabadVenue.address,
       supportingLine: "Nikah after Maghrib, followed by dinner.",
       start: "2027-01-09T00:00:00+05:30",
       calendarTitle: "Javeed & Fareen · Nikah Ceremony",
-      image: "/assets/wedding-ceremony-hd-v2.webp",
+      image: "/assets/wedding-ceremony-hd-opt.webp",
       scene: "candlelight",
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Aashiana+Banquet+%26+Conference+Road+No.+1+Banjara+Hills+Hyderabad+500034",
+      mapUrl: hyderabadVenue.mapUrl,
     },
     {
       id: "reception",
-      shortName: "Reception",
-      title: "Reception",
+      shortName: "Wedding Ceremony",
+      title: "Wedding Ceremony",
       dateLabel: "Saturday, 16 January 2027",
-      timeLabel: "",
+      timeLabel: "11 AM to 3 PM",
       venue: "Avoki Centro Arena",
       address: "Kottakadavu, Kadalundi, Calicut, Kerala – 673302",
       supportingLine: "",
-      start: "2027-01-16T00:00:00+05:30",
-      calendarTitle: "Javeed & Fareen · Valima Reception",
-      image: "/assets/reception-hd.webp",
+      start: "2027-01-16T11:00:00+05:30",
+      calendarTitle: "Javeed & Fareen · Wedding Ceremony",
+      image: "/assets/reception-hd-opt.webp",
       scene: "lanterns",
       mapUrl: "https://www.google.com/maps/search/?api=1&query=Avoki+Centro+Arena+Kottakadavu+Kadalundi+Calicut+Kerala+673302",
+      compact: true,
+      wishesFrom: "Mr. & Mrs. Abbas Nellikavil",
+      hostAddress: "Abbas Nellikavil, Thoufeeq, TPS Road, Chaliyam, Calicut",
     },
   ] satisfies Celebration[],
   calendar: { timezone: "Asia/Kolkata" },

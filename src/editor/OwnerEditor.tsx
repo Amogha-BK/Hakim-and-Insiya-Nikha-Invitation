@@ -24,14 +24,14 @@ const sections = [
 type Section = (typeof sections)[number];
 type FieldProps = {
   label: string;
-  value: string;
+  value?: string;
   onChange: (value: string) => void;
   type?: string;
   hint?: string;
   error?: string;
   required?: boolean;
 };
-function Field({ label, value, onChange, type = "text", hint, error, required }: FieldProps) {
+function Field({ label, value = "", onChange, type = "text", hint, error, required }: FieldProps) {
   const id = useId();
   const props = {
     id,
@@ -462,6 +462,16 @@ export function OwnerEditor() {
                       "text",
                       true,
                     )}
+                    <label className="wide">
+                      <input
+                        type="checkbox"
+                        checked={draft.couple.groomFirst ?? false}
+                        onChange={(event) =>
+                          edit({ ...draft, couple: { ...draft.couple, groomFirst: event.target.checked } })
+                        }
+                      />{" "}
+                      Show the groom’s name first
+                    </label>
                     {field(
                       "Wedding date",
                       "weddingDate",
@@ -561,7 +571,7 @@ export function OwnerEditor() {
                     {field(
                       "Main venue name",
                       "venue.name",
-                      draft.venue.name,
+                      draft.venue.name ?? "",
                       (v) => ({ ...draft, venue: { ...draft.venue, name: v } }),
                       "text",
                       true,
@@ -569,7 +579,7 @@ export function OwnerEditor() {
                     {field(
                       "Main Google Maps link",
                       "venue.mapUrl",
-                      draft.venue.mapUrl,
+                      draft.venue.mapUrl ?? "",
                       (v) => ({ ...draft, venue: { ...draft.venue, mapUrl: v } }),
                       "url",
                       false,
@@ -578,7 +588,7 @@ export function OwnerEditor() {
                     {field(
                       "Main venue address",
                       "venue.address",
-                      draft.venue.address,
+                      draft.venue.address ?? "",
                       (v) => ({ ...draft, venue: { ...draft.venue, address: v } }),
                       "textarea",
                       true,
@@ -652,6 +662,30 @@ export function OwnerEditor() {
                             value={e.mapUrl}
                             onChange={(v) => updateEvent(index, { ...e, mapUrl: v })}
                             hint="Blank generates a venue search."
+                          />
+                          <Field
+                            label="Displayed timing"
+                            value={e.timeLabel}
+                            onChange={(v) => updateEvent(index, { ...e, timeLabel: v || undefined })}
+                            hint="Use for a time range or timing relative to prayers."
+                          />
+                          <label className="wide">
+                            <input
+                              type="checkbox"
+                              checked={e.compact ?? false}
+                              onChange={(event) => updateEvent(index, { ...e, compact: event.target.checked })}
+                            />{" "}
+                            Use a compact venue box
+                          </label>
+                          <Field
+                            label="Function best wishes from"
+                            value={e.wishesFrom}
+                            onChange={(v) => updateEvent(index, { ...e, wishesFrom: v })}
+                          />
+                          <Field
+                            label="Function host address"
+                            value={e.hostAddress}
+                            onChange={(v) => updateEvent(index, { ...e, hostAddress: v })}
                           />
                           <Field
                             label="Function message"

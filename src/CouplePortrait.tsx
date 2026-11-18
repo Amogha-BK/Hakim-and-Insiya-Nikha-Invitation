@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "motion/react";
+import * as m from "motion/react-m";
 import { useInvitation } from "./invitation/InvitationContext";
 
 export function CouplePortrait({
@@ -41,7 +42,7 @@ export function CouplePortrait({
         </g>
 
         {/* Outer Radiant Gold Islamic Arch Stroke */}
-        <motion.path
+        <m.path
           d="M30 520V230C30 170 80 150 110 110C140 70 175 35 200 15C225 35 260 70 290 110C320 150 370 170 370 230V520Z"
           stroke="#d4af37"
           strokeWidth="3"
@@ -83,7 +84,7 @@ export function CouplePortrait({
         </g>
       </svg>
       <div className="portrait-plinth" aria-hidden="true" />
-      <motion.div
+      <m.div
         className="portrait-illustration"
         initial={shouldAnimate ? { opacity: 0, y: 24, scale: 0.96 } : false}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -94,10 +95,9 @@ export function CouplePortrait({
           alt={config.media.portraitAlt}
           width="375"
           height="533"
-          fetchPriority="high"
           decoding="async"
         />
-      </motion.div>
+      </m.div>
       <span className="portrait-star portrait-star-one text-[#f3e5ab]" aria-hidden="true">
         ✦
       </span>

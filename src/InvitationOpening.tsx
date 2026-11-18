@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
-import { motion, useIsPresent } from "motion/react";
+import { useIsPresent } from "motion/react";
+import * as m from "motion/react-m";
+import { entranceMedia } from "./invitation/entranceMedia";
 
 export function InvitationOpening({
   onOpen,
@@ -45,7 +47,7 @@ export function InvitationOpening({
   };
 
   return (
-    <motion.section
+    <m.section
       className="video-opening"
       data-phase={phase}
       aria-label="Wedding invitation opening"
@@ -56,11 +58,10 @@ export function InvitationOpening({
       <video
         ref={videoRef}
         className="envelope-video"
-        src="/assets/envelope-opening-hd-v2.mp4"
-        poster="/envelope-poster.jpg"
+        src={entranceMedia.video}
         muted
         playsInline
-        preload="auto"
+        preload="none"
         disablePictureInPicture
         tabIndex={-1}
         aria-label="Wedding invitation opening video"
@@ -79,23 +80,27 @@ export function InvitationOpening({
           setPhase("idle");
         }}
       />
-      <img
-        className={`entrance-courtyard ${courtyardReady && courtyardRevealed ? "is-visible" : ""}`}
-        src="/assets/entrance-courtyard-hd-v2.webp"
-        alt=""
-        aria-hidden="true"
-        loading="eager"
-        decoding="async"
-        onLoad={() => setCourtyardReady(true)}
-      />
-      {phase !== "playing" && (
+      {phase !== "idle" && (
         <img
-          className="envelope-poster"
-          src="/envelope-poster.jpg"
+          className={`entrance-courtyard ${courtyardReady && courtyardRevealed ? "is-visible" : ""}`}
+          src={entranceMedia.courtyard}
           alt=""
           aria-hidden="true"
-          fetchPriority="high"
+          fetchPriority="low"
+          decoding="async"
+          onLoad={() => setCourtyardReady(true)}
         />
+      )}
+      {phase !== "playing" && (
+        <picture aria-hidden="true">
+          <source type="image/avif" srcSet={entranceMedia.poster} />
+          <img
+            className="envelope-poster"
+            src={entranceMedia.fallbackPoster}
+            alt=""
+            fetchPriority="high"
+          />
+        </picture>
       )}
       {phase !== "playing" && (
         <button
@@ -108,6 +113,6 @@ export function InvitationOpening({
           <span className="simple-open-label">{mediaFailed ? "Tap to retry" : "Tap to open"}</span>
         </button>
       )}
-    </motion.section>
+    </m.section>
   );
 }

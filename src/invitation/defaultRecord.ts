@@ -1,4 +1,4 @@
-import { invitationConfig as original } from "../invitationConfig";
+import { invitationConfig as original, type Celebration } from "../invitationConfig";
 import type { WeddingRecord } from "./schema";
 
 export const customerRecord: WeddingRecord = {
@@ -11,6 +11,7 @@ export const customerRecord: WeddingRecord = {
   couple: {
     first: original.couple.first,
     second: original.couple.second,
+    groomFirst: true,
     groomFullName: original.couple.groomFullName,
     brideFullName: original.couple.brideFullName,
     brideQualification: original.couple.brideQualification,
@@ -41,10 +42,10 @@ export const customerRecord: WeddingRecord = {
   wording: {
     heroMessage: "Request the honour of your presence as they begin their beautiful journey together.",
     heroFootnote: "Your presence and duas mean the world to us.",
-    celebrationsIntro: "Join us with your blessings and duas as we celebrate our Nikah.",
+    celebrationsIntro: "We invite you to our Nikah in Hyderabad and our wedding ceremony in Kerala.",
     closingNote: original.closingBlessing,
   },
-  celebrations: original.celebrations.map((event) => ({
+  celebrations: original.celebrations.map((event: Celebration) => ({
     id: event.id,
     shortName: event.shortName,
     title: event.title,
@@ -56,6 +57,9 @@ export const customerRecord: WeddingRecord = {
     supportingLine: event.supportingLine,
     image: event.image,
     scene: event.scene,
+    compact: event.compact,
+    wishesFrom: event.wishesFrom,
+    hostAddress: event.hostAddress,
     phereTime: "",
   })),
 };

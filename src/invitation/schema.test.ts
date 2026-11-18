@@ -15,21 +15,36 @@ test("sample data survives a JSON round trip and derives coherent invitation dat
   const config = toTemplateConfig(validateRecord(JSON.parse(JSON.stringify(createSampleRecord()))));
   assert.equal(config.display.wedding.full, "14 February 2027");
   assert.equal(config.display.wedding.weekday, "Sunday");
-  assert.equal(config.display.countdownLabel, "14 February 2027 · 12:00 a.m. IST");
+  assert.equal(config.display.countdownLabel, "14 February 2027");
   assert.equal(config.celebrations[0].dateLabel, "Saturday, 13 February 2027");
   assert.equal(config.celebrations[0].timeLabel, "7:00 p.m.");
   assert.equal(new Date(config.celebrations[0].start).toISOString(), "2027-02-13T13:30:00.000Z");
   assert.equal(config.display.celebrationsLabel, "13 & 14 February 2027 · Jaipur");
 });
-test("all five supported functions render through the same data adapter", () => {
+test("all supported function types render through the same data adapter", () => {
+  for (const weddingKind of ["nikah", "wedding"] as const) {
+    const sample = createSampleRecord();
+    const kinds = eventKinds.filter((id) => id !== (weddingKind === "nikah" ? "wedding" : "nikah"));
+    sample.celebrations = kinds.map((id) => sampleEvent(id, sample.weddingDate));
+    const config = toTemplateConfig(validateRecord(sample));
+    assert.deepEqual(config.celebrations.map((e) => e.id), kinds);
+    assert.ok(config.celebrations.every((e) => e.calendarTitle.includes("Aanya & Vivaan")));
+  }
+});
+test("groom-first and compact venue settings survive the record import", () => {
   const sample = createSampleRecord();
-  sample.celebrations = eventKinds.map((id) => sampleEvent(id, sample.weddingDate));
-  const config = toTemplateConfig(validateRecord(sample));
-  assert.deepEqual(
-    config.celebrations.map((e) => e.id),
-    eventKinds,
-  );
-  assert.ok(config.celebrations.every((e) => e.calendarTitle.includes("Aanya & Vivaan")));
+  sample.couple.groomFirst = true;
+  Object.assign(sample.celebrations[0], {
+    compact: true,
+    wishesFrom: "The groom’s family",
+    hostAddress: "Family address",
+  });
+  const config = toTemplateConfig(validateRecord(JSON.parse(JSON.stringify(sample))));
+  assert.deepEqual(config.display.names, ["Vivaan", "Aanya"]);
+  assert.deepEqual(config.display.initials, ["V", "A"]);
+  assert.equal(config.celebrations[0].compact, true);
+  assert.equal(config.celebrations[0].wishesFrom, "The groom’s family");
+  assert.equal(config.celebrations[0].hostAddress, "Family address");
 });
 test("optional fields can be omitted without leaking previous customer defaults", () => {
   const sample = createSampleRecord() as unknown as Record<string, unknown>;
@@ -118,6 +133,8 @@ test("blank Maps links are generated safely from each venue", () => {
   const sample = createSampleRecord();
   sample.venue.address = "Garden & Lake #1";
   const config = validateRecord(sample);
+  assert.ok(config.venue.mapUrl);
+  assert.ok(config.celebrations[0].mapUrl);
   assert.equal(
     new URL(config.venue.mapUrl).searchParams.get("query"),
     "Sample Garden Venue, Garden & Lake #1",
