@@ -1,5 +1,4 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import * as Dialog from "@radix-ui/react-dialog";
 import qrcode from "qrcode-generator";
 import {
   CalendarPlus,
@@ -463,9 +462,6 @@ export default function App() {
   const [started, setStarted] = useState(false);
   const [opened, setOpened] = useState(false);
   const [revealed, setRevealed] = useState(false);
-  const [emblemsDismissed, setEmblemsDismissed] = useState(false);
-  const { passportEmblemUrl, shellEmblemUrl } = config.media;
-  const hasOpeningEmblems = Boolean(passportEmblemUrl || shellEmblemUrl);
   const invitationHeading = useRef<HTMLHeadingElement>(null);
   const reducedMotion = useReducedMotion();
   const weddingAudio = useRef<HTMLAudioElement>(null);
@@ -474,9 +470,9 @@ export default function App() {
   useEffect(() => {
     if (revealed) {
       window.scrollTo({ top: 0, behavior: "instant" });
-      if (!hasOpeningEmblems) invitationHeading.current?.focus({ preventScroll: true });
+      invitationHeading.current?.focus({ preventScroll: true });
     }
-  }, [revealed, hasOpeningEmblems]);
+  }, [revealed]);
 
   useEffect(() => {
     if (revealed) return;
@@ -527,44 +523,6 @@ export default function App() {
           />
         )}
       </AnimatePresence>
-
-      {hasOpeningEmblems && (
-        <Dialog.Root
-          open={revealed && !emblemsDismissed}
-          onOpenChange={(isOpen) => setEmblemsDismissed(!isOpen)}
-        >
-          <Dialog.Portal>
-            <Dialog.Overlay className="opening-emblems-backdrop" />
-            <Dialog.Content
-              className="opening-emblems-dialog"
-              aria-describedby={undefined}
-              onCloseAutoFocus={(event) => {
-                event.preventDefault();
-                invitationHeading.current?.focus({ preventScroll: true });
-              }}
-            >
-              <Dialog.Title className="sr-only">
-                {display.names.join(" & ")}
-              </Dialog.Title>
-              <div className="opening-emblems">
-                {passportEmblemUrl && (
-                  <div className="opening-emblem-page opening-emblem-page-passport">
-                    <img className="opening-emblem opening-emblem-passport" src={passportEmblemUrl} alt="Gold airplane wedding monogram" width="192" height="192" />
-                  </div>
-                )}
-                {shellEmblemUrl && (
-                  <div className="opening-emblem-page opening-emblem-page-shell">
-                    <img className="opening-emblem opening-emblem-shell" src={shellEmblemUrl} alt="Pearl shell wedding monogram" width="192" height="161" />
-                  </div>
-                )}
-              </div>
-              <Dialog.Close className="opening-emblems-continue focus-ring">
-                Continue to invitation
-              </Dialog.Close>
-            </Dialog.Content>
-          </Dialog.Portal>
-        </Dialog.Root>
-      )}
 
       <m.div
         className="invitation midnight-royal-invitation"
@@ -738,7 +696,6 @@ export default function App() {
                   type="button"
                   className="opening-replay text-[#d4af37] focus-ring"
                   onClick={() => {
-                    setEmblemsDismissed(false);
                     setRevealed(false);
                     setOpened(false);
                   }}

@@ -46,8 +46,6 @@ export const invitationConfig: WeddingRecord = {
     portraitUrl: "/assets/hakim-insiya-seated-portrait.webp",
     portraitAlt: "Hakim and Insiya seated together in ivory and lavender wedding attire before marigold garlands",
     portraitHighResUrl: "/assets/hakim-insiya-seated-portrait-4k.webp",
-    passportEmblemUrl: "/assets/hakim-insiya-monogram.png",
-    shellEmblemUrl: "/assets/hakim-insiya-shell-emblem.webp",
     venueArtworkUrl: entranceMedia.courtyard,
   },
   wording: {

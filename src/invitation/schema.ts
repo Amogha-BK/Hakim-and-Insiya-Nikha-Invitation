@@ -64,8 +64,6 @@ export type WeddingRecord = {
     portraitAlt: string;
     venueArtworkUrl: string;
     portraitHighResUrl?: string;
-    passportEmblemUrl?: string;
-    shellEmblemUrl?: string;
   };
   wording: {
     heroMessage: string;
@@ -338,8 +336,6 @@ export function validateRecord(value: unknown): WeddingRecord {
     },
     media: {
       portraitHighResUrl: optionalImage("portraitHighResUrl"),
-      passportEmblemUrl: optionalImage("passportEmblemUrl") ?? optionalImage("closingEmblemUrl"),
-      shellEmblemUrl: optionalImage("shellEmblemUrl") ?? optionalImage("formalEmblemUrl"),
       portraitUrl: media(
         text(images, "portraitUrl", "media.", true, 12 * 1024 * 1024),
         "media.portraitUrl",

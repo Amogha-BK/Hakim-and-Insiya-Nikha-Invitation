@@ -126,8 +126,6 @@ export function wishnotePlugin(): Plugin {
       for (const file of [
         record.media.portraitUrl,
         record.media.portraitHighResUrl,
-        record.media.passportEmblemUrl,
-        record.media.shellEmblemUrl,
         record.media.venueArtworkUrl,
         record.optional.musicUrl,
         ...record.celebrations.map((e) => e.image),
