@@ -59,7 +59,7 @@ export type WeddingRecord = {
     musicUrl: string;
     whatsappHostNumber: string;
   };
-  media: { portraitUrl: string; portraitAlt: string; venueArtworkUrl: string; coverUrl?: string };
+  media: { portraitUrl: string; portraitAlt: string; venueArtworkUrl: string };
   wording: {
     heroMessage: string;
     heroFootnote: string;
@@ -325,11 +325,6 @@ export function validateRecord(value: unknown): WeddingRecord {
       whatsappHostNumber: whatsapp,
     },
     media: {
-      coverUrl: media(
-        text(images, "coverUrl", "media.", false, 12 * 1024 * 1024),
-        "media.coverUrl",
-        "image",
-      ) || undefined,
       portraitUrl: media(
         text(images, "portraitUrl", "media.", true, 12 * 1024 * 1024),
         "media.portraitUrl",

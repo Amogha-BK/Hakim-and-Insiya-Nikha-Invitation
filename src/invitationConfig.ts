@@ -46,7 +46,6 @@ export const invitationConfig: WeddingRecord = {
     portraitUrl: "/assets/hakim-insiya-portrait.webp",
     portraitAlt: "Illustrated bride in a lavender rida and groom in an ivory sherwani and safa",
     venueArtworkUrl: entranceMedia.courtyard,
-    coverUrl: "/assets/hakim-insiya-cover.jpg",
   },
   wording: {
     heroMessage: "Wedding Invitation",

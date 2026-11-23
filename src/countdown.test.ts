@@ -11,7 +11,6 @@ test("the invitation record keeps the three Pune events, timings and couple illu
   const [mehendi, nikah, reception] = invitation.celebrations;
   assert.deepEqual(invitation.display.names, ["Hakim", "Insiya"]);
   assert.equal(invitation.media.portraitUrl, "/assets/hakim-insiya-portrait.webp");
-  assert.equal(invitation.media.coverUrl, "/assets/hakim-insiya-cover.jpg");
   assert.equal(mehendi.dateLabel, "Friday, 22 January 2027");
   assert.equal(mehendi.timeLabel, "10:00 am onwards");
   assert.equal(nikah.dateLabel, "Saturday, 23 January 2027");

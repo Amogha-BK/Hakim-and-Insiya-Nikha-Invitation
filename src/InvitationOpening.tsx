@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { useIsPresent, useReducedMotion } from "motion/react";
 import * as m from "motion/react-m";
 import { entranceMedia } from "./invitation/entranceMedia";
-import { useInvitation } from "./invitation/InvitationContext";
 
 export function InvitationOpening({
   onOpen,
@@ -16,7 +15,6 @@ export function InvitationOpening({
   const videoRef = useRef<HTMLVideoElement>(null);
   const isPresent = useIsPresent();
   const reducedMotion = useReducedMotion();
-  const { display, media, city } = useInvitation();
   const finished = useRef(false);
   const playbackRequested = useRef(false);
   const startupTimer = useRef<number | undefined>(undefined);
@@ -50,7 +48,7 @@ export function InvitationOpening({
 
   return (
     <m.section
-      className={`video-opening${media.coverUrl ? " has-invitation-cover" : ""}`}
+      className="video-opening"
       data-phase={phase}
       aria-label="Wedding invitation opening"
       initial={{ opacity: 1 }}
@@ -76,25 +74,7 @@ export function InvitationOpening({
           if (playbackRequested.current) finishOpening();
         }}
       />
-      {phase !== "playing" && media.coverUrl && (
-        <div className="invitation-cover">
-          <picture className="invitation-cover-wide">
-            <source media="(min-width: 601px)" srcSet={media.coverUrl} />
-            <img alt={`${display.names.join(" and ")}’s wedding invitation`} width="1200" height="630" fetchPriority="high" />
-          </picture>
-          <div className="invitation-cover-mobile">
-            <div className="invitation-cover-copy">
-              <p className="invitation-cover-kicker">Wedding Invitation</p>
-              <p className="invitation-cover-names">{display.names.join(" & ")}</p>
-              <p className="invitation-cover-date">Nikah · {display.wedding.full} · {city}</p>
-            </div>
-            <div className="invitation-cover-portrait">
-              <img src={media.portraitUrl} alt="" width="375" height="533" fetchPriority="high" />
-            </div>
-          </div>
-        </div>
-      )}
-      {phase !== "playing" && !media.coverUrl && (
+      {phase !== "playing" && (
         <picture aria-hidden="true">
           <source type="image/avif" srcSet={entranceMedia.poster} />
           <img
@@ -108,11 +88,11 @@ export function InvitationOpening({
       {phase === "idle" ? (
         <button
           type="button"
-          className={`${media.coverUrl ? "invitation-cover-button" : "envelope-open-trigger"} focus-ring`}
+          className="envelope-open-trigger focus-ring"
           onClick={playVideo}
           disabled={!isPresent}
         >
-          <span className={media.coverUrl ? undefined : "simple-open-label"}>Open invitation</span>
+          <span className="simple-open-label">Tap to open</span>
         </button>
       ) : (
         <button
