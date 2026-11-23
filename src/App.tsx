@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
 import qrcode from "qrcode-generator";
 import {
   CalendarPlus,
@@ -461,6 +462,9 @@ export default function App() {
   const [started, setStarted] = useState(false);
   const [opened, setOpened] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [emblemsDismissed, setEmblemsDismissed] = useState(false);
+  const { passportEmblemUrl, shellEmblemUrl } = config.media;
+  const hasOpeningEmblems = Boolean(passportEmblemUrl || shellEmblemUrl);
   const invitationHeading = useRef<HTMLHeadingElement>(null);
   const reducedMotion = useReducedMotion();
   const weddingAudio = useRef<HTMLAudioElement>(null);
@@ -469,9 +473,9 @@ export default function App() {
   useEffect(() => {
     if (revealed) {
       window.scrollTo({ top: 0, behavior: "instant" });
-      invitationHeading.current?.focus({ preventScroll: true });
+      if (!hasOpeningEmblems) invitationHeading.current?.focus({ preventScroll: true });
     }
-  }, [revealed]);
+  }, [revealed, hasOpeningEmblems]);
 
   useEffect(() => {
     if (revealed) return;
@@ -523,6 +527,44 @@ export default function App() {
         )}
       </AnimatePresence>
 
+      {hasOpeningEmblems && (
+        <Dialog.Root
+          open={revealed && !emblemsDismissed}
+          onOpenChange={(isOpen) => setEmblemsDismissed(!isOpen)}
+        >
+          <Dialog.Portal>
+            <Dialog.Overlay className="opening-emblems-backdrop" />
+            <Dialog.Content
+              className="opening-emblems-dialog"
+              aria-describedby={undefined}
+              onCloseAutoFocus={(event) => {
+                event.preventDefault();
+                invitationHeading.current?.focus({ preventScroll: true });
+              }}
+            >
+              <Dialog.Title className="sr-only">
+                {display.names.join(" & ")}
+              </Dialog.Title>
+              <div className="opening-emblems">
+                {passportEmblemUrl && (
+                  <div className="opening-emblem-page opening-emblem-page-passport">
+                    <img className="opening-emblem opening-emblem-passport" src={passportEmblemUrl} alt="Gold airplane wedding monogram" width="192" height="192" />
+                  </div>
+                )}
+                {shellEmblemUrl && (
+                  <div className="opening-emblem-page opening-emblem-page-shell">
+                    <img className="opening-emblem opening-emblem-shell" src={shellEmblemUrl} alt="Pearl shell wedding monogram" width="192" height="161" />
+                  </div>
+                )}
+              </div>
+              <Dialog.Close className="opening-emblems-continue focus-ring">
+                Continue to invitation
+              </Dialog.Close>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
+      )}
+
       <m.div
         className="invitation midnight-royal-invitation"
         inert={!revealed}
@@ -551,9 +593,21 @@ export default function App() {
           >
             <SparkleField variant="hero" active={opened} />
             <div className="hero-editorial-grid">
-              <div className="hero-portrait-column">
-                <CouplePortrait className="hero-couple" animate={false} />
-              </div>
+              {config.media.portraitHighResUrl ? (
+                <a
+                  className="hero-photo-frame focus-ring"
+                  href={config.media.portraitHighResUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`${config.media.portraitAlt}. Open full-resolution portrait in a new tab.`}
+                >
+                  <img className="hero-couple-photo" src={config.media.portraitUrl} alt="" decoding="async" />
+                </a>
+              ) : (
+                <div className="hero-portrait-column">
+                  <CouplePortrait className="hero-couple" animate={false} />
+                </div>
+              )}
 
               <div className="hero-inner midnight-hero-inner">
                 {arabicInvocation && (
@@ -687,6 +741,7 @@ export default function App() {
                   type="button"
                   className="opening-replay text-[#d4af37] focus-ring"
                   onClick={() => {
+                    setEmblemsDismissed(false);
                     setRevealed(false);
                     setOpened(false);
                   }}

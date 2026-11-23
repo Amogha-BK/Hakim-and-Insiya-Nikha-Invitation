@@ -43,8 +43,11 @@ export const invitationConfig: WeddingRecord = {
     whatsappHostNumber: "",
   },
   media: {
-    portraitUrl: "/assets/hakim-insiya-portrait.webp",
-    portraitAlt: "Illustrated bride in a lavender rida and groom in an ivory sherwani and safa",
+    portraitUrl: "/assets/hakim-insiya-seated-portrait.webp",
+    portraitAlt: "Hakim and Insiya seated together in ivory and lavender wedding attire before marigold garlands",
+    portraitHighResUrl: "/assets/hakim-insiya-seated-portrait-4k.webp",
+    passportEmblemUrl: "/assets/hakim-insiya-monogram.png",
+    shellEmblemUrl: "/assets/hakim-insiya-shell-emblem.webp",
     venueArtworkUrl: entranceMedia.courtyard,
   },
   wording: {

@@ -125,11 +125,14 @@ export function wishnotePlugin(): Plugin {
       ]);
       for (const file of [
         record.media.portraitUrl,
+        record.media.portraitHighResUrl,
+        record.media.passportEmblemUrl,
+        record.media.shellEmblemUrl,
         record.media.venueArtworkUrl,
         record.optional.musicUrl,
         ...record.celebrations.map((e) => e.image),
       ])
-        if (file.startsWith("/")) files.add(file);
+        if (file?.startsWith("/")) files.add(file);
       for (const file of files) {
         const src = path.resolve("public", file.slice(1));
         if (

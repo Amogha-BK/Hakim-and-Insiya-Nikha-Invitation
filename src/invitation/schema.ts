@@ -59,7 +59,14 @@ export type WeddingRecord = {
     musicUrl: string;
     whatsappHostNumber: string;
   };
-  media: { portraitUrl: string; portraitAlt: string; venueArtworkUrl: string };
+  media: {
+    portraitUrl: string;
+    portraitAlt: string;
+    venueArtworkUrl: string;
+    portraitHighResUrl?: string;
+    passportEmblemUrl?: string;
+    shellEmblemUrl?: string;
+  };
   wording: {
     heroMessage: string;
     heroFootnote: string;
@@ -201,6 +208,11 @@ export function validateRecord(value: unknown): WeddingRecord {
   const venue = object(root.venue, "venue");
   const optional = root.optional === undefined ? {} : object(root.optional, "optional");
   const images = object(root.media, "media");
+  const optionalImage = (key: string) => media(
+    text(images, key, "media.", false, 12 * 1024 * 1024),
+    `media.${key}`,
+    "image",
+  ) || undefined;
   const wording = root.wording === undefined ? {} : object(root.wording, "wording");
   const date = text(root, "weddingDate", "", true);
   if (!validDay(date))
@@ -325,6 +337,9 @@ export function validateRecord(value: unknown): WeddingRecord {
       whatsappHostNumber: whatsapp,
     },
     media: {
+      portraitHighResUrl: optionalImage("portraitHighResUrl"),
+      passportEmblemUrl: optionalImage("passportEmblemUrl") ?? optionalImage("closingEmblemUrl"),
+      shellEmblemUrl: optionalImage("shellEmblemUrl") ?? optionalImage("formalEmblemUrl"),
       portraitUrl: media(
         text(images, "portraitUrl", "media.", true, 12 * 1024 * 1024),
         "media.portraitUrl",
