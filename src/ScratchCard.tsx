@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Sparkles, Heart } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useInvitation } from "./invitation/InvitationContext";
 
 export function ScratchCard() {
@@ -72,7 +72,7 @@ export function ScratchCard() {
 
       ctx.fillStyle = "#f3e5ab";
       ctx.font = "italic 15px Georgia, serif";
-      ctx.fillText("Scratch to Reveal the Sacred Date", width / 2, height / 2 + 16);
+      ctx.fillText("Scratch to Reveal the Dates", width / 2, height / 2 + 16);
     };
 
     paintCover();
@@ -181,27 +181,18 @@ export function ScratchCard() {
         ref={containerRef}
         className="scratch-card-box midnight-card-box"
         role="region"
-        aria-label="Interactive scratch card revealing wedding date"
+        aria-label="Interactive scratch card revealing wedding function dates"
       >
-        {/* Base Layer: Revealed Wedding Date in Midnight Navy & Antique Gold */}
         <div className="scratch-underlay midnight-underlay">
           <div className="scratch-inner-border midnight-inner-border">
-            <span className="scratch-kicker text-[#d4af37]">Save The Date</span>
-            <div className="scratch-date-display">
-              <span className="scratch-day-num text-[#faf8f5]">{config.display.wedding.day}</span>
-              <div className="scratch-month-col">
-                <strong className="text-[#f3e5ab]">{config.display.wedding.month.toUpperCase()}</strong>
-                <span className="text-[#cbd5e1]">{config.display.wedding.year} · {config.display.wedding.weekday.toUpperCase()}</span>
-              </div>
-            </div>
-            <p className="scratch-couple-names text-[#faf8f5]">
-              {config.display.names[0]} <span className="text-[0.75em] text-[#d4af37]">&amp;</span> {config.display.names[1]}
-            </p>
-            <p className="scratch-venue-city text-[#d4af37]">Nikah Ceremony · January 2027</p>
-            <div className="scratch-forever-pill bg-[#081225]/80 border border-[#d4af37]/40 text-[#faf8f5]">
-              <Heart size={12} className="text-[#d4af37]" aria-hidden="true" />
-              <span>Two Souls United In Duas</span>
-            </div>
+            <ul className="scratch-function-list" aria-hidden={!isRevealed}>
+              {config.celebrations.map((event) => (
+                <li key={event.id}>
+                  <strong>{event.shortName}</strong>
+                  <time dateTime={event.start.slice(0, 10)}>{event.dateLabel}</time>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
@@ -225,12 +216,12 @@ export function ScratchCard() {
           {isRevealed ? (
             <span className="scratch-revealed-text text-[#f3e5ab]">
               <Sparkles size={13} className="inline mr-1 text-[#d4af37]" aria-hidden="true" />
-              Date Revealed: {config.display.wedding.full}
+              Function dates revealed
             </span>
           ) : (
             <span className="text-[#cbd5e1]">
               {scratchPercent > 0
-                ? "Keep scratching to reveal the starry date..."
+                ? "Keep scratching to reveal the dates"
                 : "Scratch with finger or mouse, or tap Reveal"}
             </span>
           )}
@@ -238,7 +229,7 @@ export function ScratchCard() {
 
         {!isRevealed && (
           <button type="button" className="scratch-reveal-button midnight-reveal-btn focus-ring" onClick={revealCard}>
-            Reveal Date
+            Reveal Dates
           </button>
         )}
       </div>

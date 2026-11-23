@@ -4002,16 +4002,59 @@ footer .monogram {
   color: var(--ink);
   line-height: 1.7;
 }
-.function-card-hijri,
-.function-card-schedule-note {
+.function-card-hijri {
   color: #3d1a14;
   font-size: 0.95rem;
-}
-.function-card-hijri {
   margin-top: 6px;
 }
-.function-card-schedule-note {
-  margin-top: 8px;
+.function-card-time-lines {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+.function-card-time > svg {
+  flex-shrink: 0;
+}
+.function-card-time-lines strong {
+  font-size: clamp(1rem, 5vw, 1.25rem);
+  font-weight: 800;
+}
+.midnight-scratch-wrapper .scratch-card-box {
+  height: auto;
+}
+.midnight-scratch-wrapper .scratch-underlay {
+  position: relative;
+  inset: auto;
+}
+.midnight-scratch-wrapper .scratch-inner-border {
+  height: auto;
+  min-height: 210px;
+}
+.scratch-function-list {
+  display: grid;
+  width: 100%;
+  color: #faf8f5;
+  line-height: 1.4;
+}
+.scratch-function-list li {
+  display: grid;
+  gap: 4px;
+  padding: 9px 4px;
+}
+.scratch-function-list li + li {
+  border-top: 1px solid #d4af3759;
+}
+.scratch-function-list strong {
+  font-size: clamp(0.95rem, 4.5vw, 1.15rem);
+}
+.scratch-function-list time {
+  color: #f3e5ab;
+  font-size: clamp(0.78rem, 3.5vw, 0.95rem);
+}
+.midnight-hero .hero-invitation-line {
+  margin-bottom: 20px;
 }
 
 .video-opening .opening-skip {

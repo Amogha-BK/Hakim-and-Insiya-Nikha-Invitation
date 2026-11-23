@@ -359,7 +359,7 @@ function EventCard({ event, index }: { event: Celebration; index: number }) {
   const reducedMotion = useReducedMotion();
   const isReception = event.id === "reception";
   const subtitle = event.title.includes(" — ") ? event.title.split(" — ")[1] : event.title;
-  const hasTime = Boolean(event.timeLabel && event.timeLabel.trim());
+  const timeLines = [event.timeLabel, event.scheduleNote].filter((line) => line?.trim());
   const hasVenue = Boolean(event.venue && event.venue.trim());
 
   return (
@@ -383,14 +383,15 @@ function EventCard({ event, index }: { event: Celebration; index: number }) {
           <time dateTime={event.start}>{event.dateLabel}</time>
         </p>
         {event.hijriDate && <p className="function-card-hijri">{event.hijriDate}</p>}
-        {hasTime && (
-          <p className="function-card-time">
+        {timeLines.length > 0 && (
+          <div className="function-card-time">
             <Clock size={19} aria-hidden="true" />
-            <strong>{event.timeLabel}</strong>
+            <div className="function-card-time-lines">
+              {timeLines.map((line, index) => <strong key={index}>{line}</strong>)}
+            </div>
             {event.hasExactTime && <span>IST</span>}
-          </p>
+          </div>
         )}
-        {event.scheduleNote && <p className="function-card-schedule-note">{event.scheduleNote} IST</p>}
         {hasVenue && (
           <div className="function-card-venue-block">
             <MapPin size={22} aria-hidden="true" />
@@ -621,10 +622,6 @@ export default function App() {
                 {config.wording.heroMessage && (
                   <p className="hero-invitation-line text-[#e8dfc8]">{config.wording.heroMessage}</p>
                 )}
-                <div className="hero-date midnight-hero-date">
-                  <span>{config.display.wedding.weekday}{config.city && ` · ${config.city}`}</span>
-                  <time dateTime={config.weddingDate}>{config.display.wedding.full}</time>
-                </div>
                 <a className="button button-solid midnight-gold-btn focus-ring" href="#celebrations">
                   Explore the celebrations <ArrowDown size={18} aria-hidden="true" />
                 </a>
@@ -685,7 +682,7 @@ export default function App() {
           {/* Section 3 & 5 — Scratch to Reveal Date & Countdown */}
           <section className="countdown-section midnight-countdown-section" id="countdown">
             <div className="date-keepsake">
-              <SectionHeading eyebrow="Royal Keepsake">Save Our Date</SectionHeading>
+              <SectionHeading eyebrow="Royal Keepsake">Save Our Dates</SectionHeading>
               <ScratchCard />
             </div>
 
