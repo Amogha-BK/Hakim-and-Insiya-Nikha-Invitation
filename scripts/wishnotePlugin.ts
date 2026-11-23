@@ -123,13 +123,15 @@ export function wishnotePlugin(): Plugin {
         "/assets/wedding-ceremony-hd-opt.webp",
         "/assets/reception-hd-opt.webp",
       ]);
+      if (record.media.coverUrl) files.add("/assets/midnight-jali-decor.jpg");
       for (const file of [
         record.media.portraitUrl,
+        record.media.coverUrl,
         record.media.venueArtworkUrl,
         record.optional.musicUrl,
         ...record.celebrations.map((e) => e.image),
       ])
-        if (file.startsWith("/")) files.add(file);
+        if (file?.startsWith("/")) files.add(file);
       for (const file of files) {
         const src = path.resolve("public", file.slice(1));
         if (

@@ -1,59 +1,40 @@
-import { entranceMedia } from "./invitation/entranceMedia.ts";
+﻿import { entranceMedia } from "./invitation/entranceMedia.ts";
+import { mapSearch, type WeddingRecord } from "./invitation/schema.ts";
 
-export type Celebration = {
-  id: "nikah" | "reception";
-  shortName: string;
-  title: string;
-  dateLabel: string;
-  timeLabel?: string;
-  venue?: string;
-  address?: string;
-  supportingLine: string;
-  start: string;
-  calendarTitle: string;
-  image: string;
-  scene: "lanterns" | "fire" | "candlelight";
-  mapUrl?: string;
-  compact?: boolean;
-  wishesFrom?: string;
-  hostAddress?: string;
+const nikahVenue = {
+  name: "Husainy Baug",
+  address: "605, Sachapir St, near Trophy House, Camp, Pune – 411002",
+  mapUrl: mapSearch("Husainy Baug, 605 Sachapir St, Camp, Pune 411002"),
 };
+const mehendiAddress = "6th Floor, Dorabjee’s Royale Heritage Mall, NIBM, Pune – 411060";
+const receptionAddress = "Jarande Nagar, Mohammed Wadi, Pune – 411060";
 
-const hyderabadVenue = {
-  name: "Ashiana Banquet & Conference",
-  address: "Road No. 1, Banjara Hills, Hyderabad – 500034",
-  mapUrl: "https://www.google.com/maps/search/?api=1&query=Ashiana+Banquet+and+Conference+Road+No.+1+Banjara+Hills+Hyderabad+500034",
-};
-
-const groomParents = "Mrs and Mr Abbas Nellikavil";
-
-export const invitationConfig = {
+export const invitationConfig: WeddingRecord = {
+  version: 1,
+  templateId: "botanical",
+  language: "en",
+  weddingDate: "2027-01-23",
+  countdownTarget: "2027-01-23T00:00:00+05:30",
+  city: "Pune",
+  scratchLocation: "Pune",
   couple: {
-    first: "Fareen",
-    second: "Javeed",
-    groomFullName: "Nellikavil Mohammed Javeed",
-    brideFullName: "Dr. Shaik Fareen Banu",
-    brideQualification: "MBBS",
-    groomQualification: "B.E I.T",
-    groomParents: `s/o ${groomParents}`,
-    brideParents: "D/o Dr. H. Zeenath Banu [AH Dept] and Shaik Sohail Ahmed",
-    brideGrandparents: "Grand D/o Late Mrs. Hameeda Banu & P. Mohammed Hanief",
-    groomGrandparents: "Grand s/o Late T.K.M Koya & Late Ahmed Kutty",
+    first: "Insiya",
+    second: "Hakim",
+    groomFirst: true,
+    brideParents: "D/o Taheraben & Khuzemabhai Bhanpurawala",
+    groomParents: "S/o Mrs Alefiya & Mr Hatim Limdiwala",
+    groomGrandparents: "",
   },
-  weddingLabel: "9 January 2027",
-  countdownTarget: "2027-01-09T00:00:00+05:30",
-  islamicInvocation: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
-  invitationLine: "Together with their families, Nellikavil Mohammed Javeed and Dr. Shaik Fareen Banu request the honour of your presence and duas as they celebrate their wedding.",
-  blessingLine: "Your presence, blessings, and duas mean the world to us as we unite under the grace of Almighty Allah.",
-  closingBlessing: "We look forward to celebrating this special occasion with you. Your presence and blessings will make our celebration complete.",
-  homeAddress: "Migh Colony, Hyderabad",
+  islamicInvocation: "By the grace of Allah & Vasilah-E-Panjatan Pak (A.S.), Maulana Abbas Alamdar (A.S.), Aimmat Tahereen (S.A.), Duatul Mutlaqeen (R.A.), & Vasilah of Ad-Dail Muqaddas Syedna Mohammed Burhanuddin (R.A.) & Dua Mubarak of Syedna va Maulana Aaliqadar Muffaddal Saifuddin (T.U.S.)",
+  memorialLine: "Late Feniben & Late Mulla Hakimuddin Limdiwala",
+  blessingLine: "Sakinaben & Yahyabhai Kapadia",
+  invitationLine: "Mrs Alefiya & Mr Hatim Limdiwala cordially invite you to celebrate the wedding of their beloved son Hakim with Insiya.",
+  homeAddress: "",
   hosts: "",
   rsvp: "",
-  wishesFrom: groomParents,
-  monogram: "/assets/monogram-aa.png",
-  artwork: entranceMedia.courtyard,
-  venue: hyderabadVenue,
-  contacts: [] as string[],
+  wishesFrom: "Sakina & Husain Limdiwala\nSakina Abbas Shehrawala\nLimdiwala & Kapadia Family",
+  venue: nikahVenue,
+  contacts: [],
   optional: {
     travel: "",
     stay: "",
@@ -61,40 +42,62 @@ export const invitationConfig = {
     musicUrl: "/assets/kudmayi.m4a",
     whatsappHostNumber: "",
   },
+  media: {
+    portraitUrl: "/assets/hakim-insiya-portrait.webp",
+    portraitAlt: "Illustrated bride in a lavender rida and groom in an ivory sherwani and safa",
+    venueArtworkUrl: entranceMedia.courtyard,
+    coverUrl: "/assets/hakim-insiya-cover.jpg",
+  },
+  wording: {
+    heroMessage: "Wedding Invitation",
+    heroFootnote: "",
+    celebrationsIntro: "Kindly grace the occasion in Libas-ul-Anwar.",
+    closingNote: "",
+  },
   celebrations: [
     {
+      id: "mehndi",
+      shortName: "Mehendi Ceremony",
+      title: "Mehendi Ceremony — of Hakim",
+      start: "2027-01-22T10:00:00+05:30",
+      hijriDate: "15th Shabanul Karim, 1448 H",
+      timeLabel: "10:00 am onwards",
+      venue: "iRiS Banquet",
+      address: mehendiAddress,
+      mapUrl: mapSearch(`iRiS Banquet, ${mehendiAddress}`),
+      supportingLine: "",
+      image: "/assets/wedding-ceremony-hd-opt.webp",
+      scene: "lanterns",
+    },
+    {
       id: "nikah",
-      shortName: "Nikah",
-      title: "Nikah",
-      dateLabel: "Saturday, 9 January 2027",
-      timeLabel: "",
-      venue: hyderabadVenue.name,
-      address: hyderabadVenue.address,
-      supportingLine: "Nikah after Maghrib, followed by dinner.",
-      start: "2027-01-09T00:00:00+05:30",
-      calendarTitle: "Javeed & Fareen · Nikah Ceremony",
+      shortName: "Nikah Majlis",
+      title: "Nikah Majlis",
+      start: "2027-01-23T18:30:00+05:30",
+      hijriDate: "16th Shabanul Karim, 1448 H",
+      timeLabel: "Shitabi at 6:30 pm",
+      scheduleNote: "Majlis at 7:30 pm",
+      venue: nikahVenue.name,
+      address: nikahVenue.address,
+      mapUrl: nikahVenue.mapUrl,
+      supportingLine: "",
       image: "/assets/wedding-ceremony-hd-opt.webp",
       scene: "candlelight",
-      mapUrl: hyderabadVenue.mapUrl,
     },
     {
       id: "reception",
-      shortName: "Wedding Ceremony",
-      title: "Wedding Ceremony",
-      dateLabel: "Saturday, 16 January 2027",
-      timeLabel: "11 AM to 3 PM",
-      venue: "Avoki Centro Arena",
-      address: "Kottakadavu, Kadalundi, Calicut, Kerala – 673302",
+      shortName: "Wedding Reception",
+      title: "Wedding Reception",
+      start: "2027-01-24T19:30:00+05:30",
+      hijriDate: "17th Shabanul Karim, 1448 H",
+      timeLabel: "7:30 pm onwards",
+      scheduleNote: "Procession at 6:30 pm",
+      venue: "Jarande Lawns",
+      address: receptionAddress,
+      mapUrl: mapSearch(`Jarande Lawns, ${receptionAddress}`),
       supportingLine: "",
-      start: "2027-01-16T11:00:00+05:30",
-      calendarTitle: "Javeed & Fareen · Wedding Ceremony",
       image: "/assets/reception-hd-opt.webp",
       scene: "lanterns",
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=Avoki+Centro+Arena+Kottakadavu+Kadalundi+Calicut+Kerala+673302",
-      compact: true,
-      wishesFrom: groomParents,
-      hostAddress: "Abbas Nellikavil, Thoufeeq, TPS Road, Chaliyam, Calicut",
     },
-  ] satisfies Celebration[],
-  calendar: { timezone: "Asia/Kolkata" },
-} as const;
+  ],
+};

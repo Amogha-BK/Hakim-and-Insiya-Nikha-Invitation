@@ -3993,8 +3993,124 @@ footer .monogram {
   margin-bottom: 10px;
 }
 .closing-wishes p + p { margin-top: 10px; }
+.closing-wishes-names {
+  white-space: pre-line;
+}
+.invitation-invocation {
+  max-width: 680px;
+  margin: 0 auto 24px;
+  color: var(--ink);
+  line-height: 1.7;
+}
+.function-card-hijri,
+.function-card-schedule-note {
+  color: #3d1a14;
+  font-size: 0.95rem;
+}
+.function-card-hijri {
+  margin-top: 6px;
+}
+.function-card-schedule-note {
+  margin-top: 8px;
+}
+
+.has-invitation-cover {
+  display: grid;
+  align-content: safe center;
+  justify-items: center;
+  gap: clamp(12px, 2.5svh, 24px);
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+    max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  overflow-y: auto;
+  background: radial-gradient(ellipse at 50% 35%, #52111e, #200509 76%);
+}
+.invitation-cover {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 1080px, 145svh);
+}
+.invitation-cover-wide {
+  display: block;
+  box-shadow: 0 18px 60px #0007;
+}
+.invitation-cover-wide img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.invitation-cover-mobile {
+  display: none;
+}
+.invitation-cover-button {
+  position: relative;
+  z-index: 1;
+  min-height: 48px;
+  padding: 10px 28px;
+  border: 1px solid #f3d47b;
+  border-radius: 6px;
+  background: #f5dfab;
+  color: #391017;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.video-opening .opening-skip {
+  z-index: 3;
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
 @media (max-width: 600px) {
-  .midnight-hero h1 { align-items: center; }
+  .midnight-site-nav {
+    height: calc(64px + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
+    padding-left: max(16px, env(safe-area-inset-left));
+  }
+  .midnight-site-nav .nav-links {
+    top: calc(63px + env(safe-area-inset-top));
+  }
+  .midnight-site-nav .nav-links a {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+  }
+  .midnight-music-controls {
+    top: calc(8px + env(safe-area-inset-top));
+  }
+  .midnight-music-controls .icon-button,
+  .midnight-site-nav .nav-toggle {
+    width: 44px;
+    height: 44px;
+  }
+  .midnight-hero {
+    padding: calc(72px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 24px
+      max(16px, env(safe-area-inset-left));
+  }
+  .midnight-hero .hero-editorial-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+    padding-top: 14px;
+  }
+  .midnight-hero .hero-inner {
+    grid-row: 1;
+  }
+  .midnight-hero h1 {
+    align-items: baseline;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.2em;
+    font-size: clamp(42px, 12vw, 67px);
+    margin-top: 8px;
+  }
+  .midnight-hero .hero-date {
+    margin-block: 14px;
+  }
+  .midnight-hero .hero-portrait-column {
+    width: min(100%, 340px);
+    padding: 10px 14px 12px;
+  }
+  .midnight-hero .hero-couple {
+    width: min(100%, 250px);
+  }
   .midnight-family-section {
     width: calc(100% - 32px);
     padding: 36px 20px;
@@ -4002,5 +4118,50 @@ footer .monogram {
   .midnight-family-section .invitation-families {
     grid-template-columns: minmax(0, 1fr);
     gap: 16px;
+  }
+  .invitation-cover {
+    width: min(100%, 370px);
+  }
+  .invitation-cover-wide {
+    display: none;
+  }
+  .invitation-cover-mobile {
+    display: grid;
+    justify-items: center;
+    gap: clamp(8px, 2svh, 18px);
+    padding: clamp(12px, 3svh, 24px) 16px 18px;
+    border: double 4px #c2934e;
+    color: #f9e5b5;
+    text-align: center;
+    background: linear-gradient(#3d0911aa 0%, #350910 41%), url("/assets/midnight-jali-decor.jpg") center top / cover;
+  }
+  .invitation-cover-kicker {
+    color: #f0cc7b;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .invitation-cover-names {
+    padding-block: 4px;
+    font: 400 clamp(42px, 13vw, 64px)/1.12 var(--font-script);
+  }
+  .invitation-cover-date {
+    font: 600 1rem/1.4 var(--font-display);
+  }
+  .invitation-cover-portrait {
+    width: min(100%, 220px, 43svh);
+    aspect-ratio: 4 / 5;
+    padding: 14px 6px 5px;
+    border: 3px double #bf914c;
+    border-radius: 50% 50% 0 0 / 38% 38% 0 0;
+    background: radial-gradient(ellipse at 50% 38%, #fff6d6, #d3ad69);
+  }
+  .invitation-cover-portrait img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center bottom;
   }
 }

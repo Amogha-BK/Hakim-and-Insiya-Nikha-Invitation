@@ -46,20 +46,7 @@ const navItems = [
   ["Blessings", "blessings"],
 ] as const;
 
-function Monogram({ className = "" }: { className?: string }) {
-  const config = useInvitation();
-  return (
-    <span
-      className={`monogram ${className}`}
-      role="img"
-      aria-label={`${config.display.initials.join(" and ")} wedding monogram for ${config.display.names.join(" and ")}`}
-    >
-      <span>{config.display.initials[0]}</span>
-      <span className="monogram-ampersand">&amp;</span>
-      <span>{config.display.initials[1]}</span>
-    </span>
-  );
-}
+const bismillah = "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ";
 
 function IslamicJaliFlourish({ className = "" }: { className?: string }) {
   return (
@@ -323,14 +310,16 @@ function getGoogleCalendarUrl(event: Celebration) {
     const startDate = new Date(event.start);
     const endDate = new Date(startDate.getTime() + 4 * 60 * 60 * 1000);
     const formatTime = (d: Date) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
-    // The PDF gives prayer-relative timing, so avoid inventing a precise calendar time.
+    // Events with an unspecified start time appear as all-day calendar entries.
     const nextDay = new Date(startDate.getTime() + 24 * 60 * 60 * 1000);
     const dates = event.hasExactTime
       ? `${formatTime(startDate)}/${formatTime(endDate)}`
       : `${event.start.slice(0, 10).replace(/-/g, "")}/${nextDay.toLocaleDateString("en-CA", { timeZone: timezone }).replace(/-/g, "")}`;
     const title = encodeURIComponent(event.calendarTitle || event.title);
     const details = encodeURIComponent(
-      `${event.title}\n${event.supportingLine}${event.venue ? `\nVenue: ${event.venue}` : ""}`,
+      [event.title, event.hijriDate, event.timeLabel, event.scheduleNote, event.supportingLine]
+        .filter(Boolean)
+        .join("\n"),
     );
     const location = encodeURIComponent(event.venue ? `${event.venue}, ${event.address || ""}` : "Royal Wedding Celebration");
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${location}`;
@@ -392,6 +381,7 @@ function EventCard({ event, index }: { event: Celebration; index: number }) {
         <p className="function-card-date-line">
           <time dateTime={event.start}>{event.dateLabel}</time>
         </p>
+        {event.hijriDate && <p className="function-card-hijri">{event.hijriDate}</p>}
         {hasTime && (
           <p className="function-card-time">
             <Clock size={19} aria-hidden="true" />
@@ -399,6 +389,7 @@ function EventCard({ event, index }: { event: Celebration; index: number }) {
             {event.hasExactTime && <span>IST</span>}
           </p>
         )}
+        {event.scheduleNote && <p className="function-card-schedule-note">{event.scheduleNote} IST</p>}
         {hasVenue && (
           <div className="function-card-venue-block">
             <MapPin size={22} aria-hidden="true" />
@@ -450,6 +441,8 @@ function EventCard({ event, index }: { event: Celebration; index: number }) {
 export default function App() {
   const config = useInvitation();
   const { couple, display } = config;
+  const invocation = config.islamicInvocation ?? bismillah;
+  const arabicInvocation = /^\p{Script=Arabic}/u.test(invocation);
   const families = {
     Bride: {
       name: couple.brideFullName || couple.first,
@@ -559,36 +552,29 @@ export default function App() {
             <SparkleField variant="hero" active={opened} />
             <div className="hero-editorial-grid">
               <div className="hero-portrait-column">
-                <div className="hero-portrait-caption">
-                  <span>Blessed Union</span>
-                </div>
                 <CouplePortrait className="hero-couple" animate={false} />
-                <p className="hero-art-caption text-[#e2d6b5]">
-                  {families[familyOrder[0]].name} <span className="text-[0.8em]">&amp;</span> {families[familyOrder[1]].name}
-                </p>
               </div>
 
               <div className="hero-inner midnight-hero-inner">
-                <p className="arabic-bismillah text-[#d4af37]" dir="rtl" lang="ar">
-                  بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-                </p>
-                <p className="eyebrow text-[#d4af37]">Together with their families</p>
+                {arabicInvocation && (
+                  <p className="arabic-bismillah text-[#d4af37]" dir="rtl" lang="ar">{invocation}</p>
+                )}
                 <h1 ref={invitationHeading} tabIndex={-1}>
                   <span className="hero-name text-[#faf7ee]">{display.names[0]}</span>
                   <span className="hero-ampersand">&amp;</span>
                   <span className="hero-name text-[#faf7ee]">{display.names[1]}</span>
                 </h1>
-                <p className="hero-invitation-line text-[#e8dfc8]">
-                  {config.wording.heroMessage}
-                </p>
+                {config.wording.heroMessage && (
+                  <p className="hero-invitation-line text-[#e8dfc8]">{config.wording.heroMessage}</p>
+                )}
                 <div className="hero-date midnight-hero-date">
-                  <span>{config.display.wedding.weekday}</span>
+                  <span>{config.display.wedding.weekday}{config.city && ` · ${config.city}`}</span>
                   <time dateTime={config.weddingDate}>{config.display.wedding.full}</time>
                 </div>
                 <a className="button button-solid midnight-gold-btn focus-ring" href="#celebrations">
                   Explore the celebrations <ArrowDown size={18} aria-hidden="true" />
                 </a>
-                <p className="hero-footnote text-[#c7beaa]">{config.wording.heroFootnote}</p>
+                {config.wording.heroFootnote && <p className="hero-footnote text-[#c7beaa]">{config.wording.heroFootnote}</p>}
               </div>
             </div>
 
@@ -606,11 +592,14 @@ export default function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.1 }}
             >
-              <Monogram className="family-monogram" />
-              <p className="arabic-bismillah-small text-[#d4af37]" dir="rtl" lang="ar">
-                بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-              </p>
-              <SectionHeading eyebrow="In The Name of Allah, The Most Beneficent, The Most Merciful">
+              {invocation && (
+                arabicInvocation ? (
+                  <p className="arabic-bismillah-small text-[#d4af37]" dir="rtl" lang="ar">{invocation}</p>
+                ) : (
+                  <p className="invitation-invocation">{invocation}</p>
+                )
+              )}
+              <SectionHeading eyebrow={arabicInvocation ? "In The Name of Allah, The Most Beneficent, The Most Merciful" : undefined}>
                 The Sacred Union
               </SectionHeading>
 
@@ -636,9 +625,6 @@ export default function App() {
                 {config.invitationLine}
               </p>
 
-              <p className="family-blessing text-[#f3e5ab] italic">
-                "May Allah bless this union and shower His blessings upon you both, and unite you in goodness."
-              </p>
             </m.div>
           </section>
 
@@ -663,9 +649,7 @@ export default function App() {
             <SectionHeading eyebrow="Royal Occasions">
               Wedding Celebrations
             </SectionHeading>
-            <p className="section-intro">
-              {config.wording.celebrationsIntro}
-            </p>
+            {config.wording.celebrationsIntro && <p className="section-intro">{config.wording.celebrationsIntro}</p>}
             <div className="events">
               {config.celebrations.map((event, index) => (
                 <EventCard key={event.id} event={event} index={index} />
@@ -676,17 +660,22 @@ export default function App() {
           {/* Section 7 — Closing Blessings */}
           <footer id="blessings" className="site-footer midnight-site-footer">
             <div className="closing-copy">
-              <Monogram />
               <SectionHeading eyebrow="With Warmth &amp; Gratitude">Closing Blessings</SectionHeading>
-              <p className="closing-message text-[#e2d6b5]">
-                {config.wording.closingNote}
-              </p>
+              {config.wording.closingNote && <p className="closing-message text-[#e2d6b5]">{config.wording.closingNote}</p>}
               <p className="closing-couple-names text-[#d4af37]">
                 {display.names[0]} <span className="text-[0.75em]">&amp;</span> {display.names[1]}
               </p>
+              {config.memorialLine && <div className="closing-wishes">
+                <h3>With Heavenly Blessings of</h3>
+                <p>{config.memorialLine}</p>
+              </div>}
+              {config.blessingLine && <div className="closing-wishes">
+                <h3>With Kind Blessings of</h3>
+                <p>{config.blessingLine}</p>
+              </div>}
               {config.wishesFrom && <div className="closing-wishes">
-                <h3>Best Wishes</h3>
-                <p>{config.wishesFrom}</p>
+                <h3>With Best Wishes From</h3>
+                <p className="closing-wishes-names">{config.wishesFrom}</p>
                 {config.homeAddress && <p>{config.homeAddress}</p>}
               </div>}
               <div className="closing-rule" aria-hidden="true" style={{ background: "rgba(212, 175, 55, 0.4)" }} />

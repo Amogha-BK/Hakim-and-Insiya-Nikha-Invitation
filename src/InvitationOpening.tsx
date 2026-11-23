@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
-import { useIsPresent } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { useIsPresent, useReducedMotion } from "motion/react";
 import * as m from "motion/react-m";
 import { entranceMedia } from "./invitation/entranceMedia";
+import { useInvitation } from "./invitation/InvitationContext";
 
 export function InvitationOpening({
   onOpen,
@@ -14,38 +15,42 @@ export function InvitationOpening({
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const isPresent = useIsPresent();
+  const reducedMotion = useReducedMotion();
+  const { display, media, city } = useInvitation();
   const finished = useRef(false);
   const playbackRequested = useRef(false);
+  const startupTimer = useRef<number | undefined>(undefined);
   const [phase, setPhase] = useState<"idle" | "starting" | "playing">("idle");
-  const [mediaFailed, setMediaFailed] = useState(false);
+
+  useEffect(() => () => window.clearTimeout(startupTimer.current), []);
 
   const finishOpening = () => {
     if (finished.current) return;
     finished.current = true;
+    window.clearTimeout(startupTimer.current);
+    videoRef.current?.pause();
     onOpen();
   };
 
   const playVideo = () => {
     const video = videoRef.current;
     if (!video || finished.current || playbackRequested.current) return;
-    if (mediaFailed) video.load();
-    video.currentTime = 0;
+    onStart();
+    if (reducedMotion || video.error) {
+      finishOpening();
+      return;
+    }
     video.playbackRate = 1;
     playbackRequested.current = true;
     setPhase("starting");
+    startupTimer.current = window.setTimeout(finishOpening, 6500);
     // Remain inside the guest's gesture so inline playback works on Safari.
-    const playback = video.play();
-    onStart();
-    void playback.catch(() => {
-      if (finished.current) return;
-      playbackRequested.current = false;
-      setPhase("idle");
-    });
+    void video.play().catch(finishOpening);
   };
 
   return (
     <m.section
-      className="video-opening"
+      className={`video-opening${media.coverUrl ? " has-invitation-cover" : ""}`}
       data-phase={phase}
       aria-label="Wedding invitation opening"
       initial={{ opacity: 1 }}
@@ -62,15 +67,34 @@ export function InvitationOpening({
         disablePictureInPicture
         tabIndex={-1}
         aria-label="Wedding invitation opening video"
-        onPlaying={() => setPhase("playing")}
+        onPlaying={() => {
+          window.clearTimeout(startupTimer.current);
+          setPhase("playing");
+        }}
         onEnded={finishOpening}
         onError={() => {
-          setMediaFailed(true);
-          playbackRequested.current = false;
-          setPhase("idle");
+          if (playbackRequested.current) finishOpening();
         }}
       />
-      {phase !== "playing" && (
+      {phase !== "playing" && media.coverUrl && (
+        <div className="invitation-cover">
+          <picture className="invitation-cover-wide">
+            <source media="(min-width: 601px)" srcSet={media.coverUrl} />
+            <img alt={`${display.names.join(" and ")}’s wedding invitation`} width="1200" height="630" fetchPriority="high" />
+          </picture>
+          <div className="invitation-cover-mobile">
+            <div className="invitation-cover-copy">
+              <p className="invitation-cover-kicker">Wedding Invitation</p>
+              <p className="invitation-cover-names">{display.names.join(" & ")}</p>
+              <p className="invitation-cover-date">Nikah · {display.wedding.full} · {city}</p>
+            </div>
+            <div className="invitation-cover-portrait">
+              <img src={media.portraitUrl} alt="" width="375" height="533" fetchPriority="high" />
+            </div>
+          </div>
+        </div>
+      )}
+      {phase !== "playing" && !media.coverUrl && (
         <picture aria-hidden="true">
           <source type="image/avif" srcSet={entranceMedia.poster} />
           <img
@@ -81,15 +105,23 @@ export function InvitationOpening({
           />
         </picture>
       )}
-      {phase !== "playing" && (
+      {phase === "idle" ? (
         <button
           type="button"
-          className="envelope-open-trigger focus-ring"
-          aria-label="Tap to open"
+          className={`${media.coverUrl ? "invitation-cover-button" : "envelope-open-trigger"} focus-ring`}
           onClick={playVideo}
-          disabled={phase === "starting" || !isPresent}
+          disabled={!isPresent}
         >
-          <span className="simple-open-label">{mediaFailed ? "Tap to retry" : "Tap to open"}</span>
+          <span className={media.coverUrl ? undefined : "simple-open-label"}>Open invitation</span>
+        </button>
+      ) : (
+        <button
+          type="button"
+          className="opening-skip focus-ring"
+          onClick={finishOpening}
+          disabled={!isPresent}
+        >
+          Skip animation
         </button>
       )}
     </m.section>

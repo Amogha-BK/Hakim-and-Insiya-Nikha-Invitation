@@ -7,6 +7,8 @@ export type WeddingEvent = {
   title: string;
   start: string;
   timeLabel?: string;
+  hijriDate?: string;
+  scheduleNote?: string;
   venue?: string;
   address?: string;
   mapUrl?: string;
@@ -57,7 +59,7 @@ export type WeddingRecord = {
     musicUrl: string;
     whatsappHostNumber: string;
   };
-  media: { portraitUrl: string; portraitAlt: string; venueArtworkUrl: string };
+  media: { portraitUrl: string; portraitAlt: string; venueArtworkUrl: string; coverUrl?: string };
   wording: {
     heroMessage: string;
     heroFootnote: string;
@@ -236,6 +238,8 @@ export function validateRecord(value: unknown): WeddingRecord {
       id: id as EventKind,
       start,
       timeLabel: typeof e.timeLabel === "string" ? text(e, "timeLabel", path, false, 120) : undefined,
+      hijriDate: text(e, "hijriDate", path, false, 120) || undefined,
+      scheduleNote: text(e, "scheduleNote", path, false, 120) || undefined,
       shortName: text(e, "shortName", path, true, 120),
       title: text(e, "title", path, true, 200),
       venue: ev,
@@ -294,6 +298,7 @@ export function validateRecord(value: unknown): WeddingRecord {
       groomGrandparents: text(couple, "groomGrandparents", "couple."),
     },
     memorialLine: text(root, "memorialLine", ""),
+    islamicInvocation: typeof root.islamicInvocation === "string" ? text(root, "islamicInvocation", "") : undefined,
     invitationLine: text(root, "invitationLine", "", true),
     blessingLine: text(root, "blessingLine", ""),
     homeAddress: text(root, "homeAddress", ""),
@@ -320,6 +325,11 @@ export function validateRecord(value: unknown): WeddingRecord {
       whatsappHostNumber: whatsapp,
     },
     media: {
+      coverUrl: media(
+        text(images, "coverUrl", "media.", false, 12 * 1024 * 1024),
+        "media.coverUrl",
+        "image",
+      ) || undefined,
       portraitUrl: media(
         text(images, "portraitUrl", "media.", true, 12 * 1024 * 1024),
         "media.portraitUrl",

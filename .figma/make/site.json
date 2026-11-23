@@ -1,8 +1,8 @@
 {
-  "title": "Javeed & Fareen · Blessed Union",
-  "description": "Join Nellikavil Mohammed Javeed and Dr. Shaik Fareen Banu for their Nikah in Hyderabad on 9 January 2027, after Maghrib, and their wedding ceremony in Kerala on 16 January 2027, from 11 AM to 3 PM IST.",
+  "title": "Hakim & Insiya · Wedding Invitation",
+  "description": "Mehendi, Nikah Majlis and wedding reception for Hakim and Insiya in Pune, 22–24 January 2027.",
   "icons": {
-    "icon": "/favicon.png"
+    "icon": ""
   },
   "robots": {
     "index": false
@@ -12,6 +12,6 @@
     "ignoreReducedMotion": false
   },
   "openGraph": {
-    "image": "/assets/wedding-share-cover-groom-v2.jpg"
+    "image": "/assets/hakim-insiya-cover.jpg"
   }
 }
