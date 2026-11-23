@@ -358,7 +358,8 @@ function EventCard({ event, index }: { event: Celebration; index: number }) {
   const reducedMotion = useReducedMotion();
   const isReception = event.id === "reception";
   const subtitle = event.title.includes(" — ") ? event.title.split(" — ")[1] : event.title;
-  const timeLines = [event.timeLabel, event.scheduleNote].filter((line) => line?.trim());
+  const showScheduleNoteInTimeBox = !isReception && event.id === "nikah";
+  const timeLines = [event.timeLabel, showScheduleNoteInTimeBox ? event.scheduleNote : undefined].filter((line) => line?.trim());
   const hasVenue = Boolean(event.venue && event.venue.trim());
 
   return (
@@ -390,6 +391,11 @@ function EventCard({ event, index }: { event: Celebration; index: number }) {
             </div>
             {event.hasExactTime && <span>IST</span>}
           </div>
+        )}
+        {!showScheduleNoteInTimeBox && event.scheduleNote && (
+          <p className="function-card-schedule-note">
+            {event.scheduleNote.endsWith("IST") ? event.scheduleNote : `${event.scheduleNote} IST`}
+          </p>
         )}
         {hasVenue && (
           <div className="function-card-venue-block">

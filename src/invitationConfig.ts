@@ -1,4 +1,4 @@
-﻿import { entranceMedia } from "./invitation/entranceMedia.ts";
+import { entranceMedia } from "./invitation/entranceMedia.ts";
 import { mapSearch, type WeddingRecord } from "./invitation/schema.ts";
 
 const nikahVenue = {
@@ -91,6 +91,7 @@ export const invitationConfig: WeddingRecord = {
       start: "2027-01-24T19:30:00+05:30",
       hijriDate: "17th Shabanul Karim, 1448 H",
       timeLabel: "7:30 pm onwards",
+      scheduleNote: "Procession at 6:30 pm",
       venue: "Jarande Lawns",
       address: receptionAddress,
       mapUrl: mapSearch(`Jarande Lawns, ${receptionAddress}`),

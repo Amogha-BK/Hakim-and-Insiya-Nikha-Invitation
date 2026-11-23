@@ -4002,10 +4002,16 @@ footer .monogram {
   color: var(--ink);
   line-height: 1.7;
 }
-.function-card-hijri {
+.function-card-hijri,
+.function-card-schedule-note {
   color: #3d1a14;
   font-size: 0.95rem;
+}
+.function-card-hijri {
   margin-top: 6px;
+}
+.function-card-schedule-note {
+  margin-top: 8px;
 }
 .function-card-time-lines {
   display: grid;
