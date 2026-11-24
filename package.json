@@ -11,6 +11,8 @@
     "test": "node --experimental-strip-types --test src/countdown.test.ts src/invitation/schema.test.ts",
     "typecheck": "tsc --noEmit",
     "build": "vite build",
+    "pdf:invitation": "node scripts/generate-invitation-pdf.cjs",
+    "pdf:project": "node scripts/generate-pdf.cjs",
     "preview": "vite preview",
     "format": "oxfmt"
   },
