@@ -103,7 +103,7 @@ function MusicControl({
         .then(() => {
           if (!disposed) removeListeners();
         })
-        .catch(() => {});
+        .catch(() => { });
     };
     const startOnInteraction = (event: Event) => {
       if (userControlled.current) {
@@ -358,11 +358,8 @@ function EventCard({ event, index }: { event: Celebration; index: number }) {
   const reducedMotion = useReducedMotion();
   const isReception = event.id === "reception";
   const subtitle = event.title.includes(" — ") ? event.title.split(" — ")[1] : event.title;
-  const timeLines = (
-    isReception
-      ? [event.timeLabel]
-      : [event.timeLabel, event.scheduleNote]
-  ).filter((line): line is string => Boolean(line?.trim()));
+  const showScheduleNoteInTimeBox = !isReception && event.id === "nikah";
+  const timeLines = [event.timeLabel, showScheduleNoteInTimeBox ? event.scheduleNote : undefined].filter((line): line is string => Boolean(line?.trim()));
   const hasVenue = Boolean(event.venue && event.venue.trim());
 
   return (
@@ -395,7 +392,7 @@ function EventCard({ event, index }: { event: Celebration; index: number }) {
             {event.hasExactTime && <span>IST</span>}
           </div>
         )}
-        {event.scheduleNote && !timeLines.includes(event.scheduleNote) && (
+        {!showScheduleNoteInTimeBox && event.scheduleNote && (
           <p className="function-card-schedule-note font-bold text-black">
             {event.scheduleNote.endsWith("IST") ? event.scheduleNote : `${event.scheduleNote} IST`}
           </p>
@@ -507,14 +504,14 @@ export default function App() {
     setStarted(true);
     if (!weddingAudio.current) return;
     weddingAudio.current.volume = 0.35;
-    void weddingAudio.current.play().catch(() => {});
+    void weddingAudio.current.play().catch(() => { });
   };
 
   const openInvitation = () => {
     if (opened) return;
     if (weddingAudio.current) {
       weddingAudio.current.volume = 0.35;
-      void weddingAudio.current.play().catch(() => {});
+      void weddingAudio.current.play().catch(() => { });
     }
     window.scrollTo({ top: 0, behavior: "instant" });
     setOpened(true);
