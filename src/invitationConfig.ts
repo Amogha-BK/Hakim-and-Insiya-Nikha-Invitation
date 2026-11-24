@@ -26,7 +26,7 @@ export const invitationConfig: WeddingRecord = {
     groomGrandparents: "",
   },
   islamicInvocation: "By the grace of Allah & Vasilah-E-Panjatan Pak (A.S.), Maulana Abbas Alamdar (A.S.), Aimmat Tahereen (S.A.), Duatul Mutlaqeen (R.A.), & Vasilah of Ad-Dail Muqaddas Syedna Mohammed Burhanuddin (R.A.) & Dua Mubarak of Syedna va Maulana Aaliqadar Muffaddal Saifuddin (T.U.S.)",
-  memorialLine: "Late Feniben & Late Mulla Hakimuddin Limdiwala",
+  memorialLine: "Late Femiben & Late Mulla Hakimuddin Limdiwala",
   blessingLine: "Sakinaben & Yahyabhai Kapadia",
   invitationLine: "Mrs Alefiya & Mr Hatim Limdiwala cordially invite you to celebrate the wedding of their beloved son Hakim with Insiya.",
   homeAddress: "",
