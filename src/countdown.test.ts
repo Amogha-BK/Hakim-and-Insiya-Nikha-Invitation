@@ -20,7 +20,7 @@ test("the invitation record keeps the three Pune events, timings and couple illu
   assert.equal(nikah.hijriDate, "16th Shabanul Karim, 1448 H");
   assert.equal(reception.dateLabel, "Sunday, 24 January 2027");
   assert.equal(reception.timeLabel, "7:30 pm onwards");
-  assert.equal(reception.scheduleNote, undefined);
+  assert.equal(reception.scheduleNote, "Procession at 6:30 pm");
 });
 
 test("countdown reaches zero at the start of 23 January in India", () => {

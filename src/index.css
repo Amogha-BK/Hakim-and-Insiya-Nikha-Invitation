@@ -4007,6 +4007,13 @@ footer .monogram {
   font-size: 0.95rem;
   margin-top: 6px;
 }
+.function-card-schedule-note {
+  color: #000000 !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem;
+  margin-top: 8px;
+  text-align: center;
+}
 .function-card-time-lines {
   display: grid;
   gap: 5px;
